@@ -42,12 +42,25 @@ Deployed on 25 November 2026 to a Microsoft Fabric workspace (`mfg-ops-intellige
 | Reconciliation: silver vs gold totals, KPI recalculation | yes | yes | yes, 5 of 5 passed |
 | CI: lint, tests, wheel build on every push | yes | runs on GitHub | n/a |
 | Orchestration | `orchestrate.py` | yes | Data Pipeline `pl_mfg_ops_daily` running notebook `nb_04_orchestrated_run`; pipeline run on 25 Nov 2026 succeeded in 24 min 50 s (includes Spark session start and package install on F2) |
-| Semantic model | 11 gold tables, 14 relationships, 22 measures | measures checked by DAX query against the pipeline output | yes, Direct Lake model `sm_mfg_ops` |
-| Power BI report pages | not yet | – | – |
+| Incremental load (watermark, MERGE by business key, idempotent rerun) | yes | yes (8 tests, including rerun and SCD2) | yes, change extract of 15 Nov: 1,664 rows inserted, 188 updated, 2 quarantined, Delta `MERGE` |
+| Customer history (SCD type 2) | yes | yes | yes, `silver_customers_history`, sales joined to the customer version valid at order date |
+| Run summary (`meta_run_summary`, one row per run, failed runs included) | yes | yes | yes, 4 runs: full success, 2 failed incremental runs, incremental success |
+| Semantic model | 14 tables, 16 relationships, 43 measures, 2 roles, defined in `model_def.py` | yes (model–report field consistency, placeholders, deploy calls) | yes, Direct Lake model `sm_mfg_ops`, deployed through the Fabric REST API by notebook `06_deploy_model_and_report` |
+| Row-level security by plant | yes, roles *Plant access* (dynamic, `USERPRINCIPALNAME()`) and *All plants* | yes (role definitions) | roles deployed; filter checked per user by DAX query ([evidence](evidence/rls-check.md)). *Test as role* is not available with SSO, see the evidence file |
+| Power BI report | 9 pages incl. 2 drill-throughs, PBIR in `report_def.py`, validated against Microsoft's PBIR JSON schemas | yes | yes, `rpt_mfg_ops` ([screenshots](../README.md#the-report-in-microsoft-fabric)) |
+| Failure alert from the Data Pipeline | planned | – | not yet: the notebook raises on a failed run, so the pipeline run fails and shows in the monitoring hub, but no e-mail is sent yet |
+| Fabric Git integration, deployment pipeline dev → prod | planned | – | not yet |
 
-First Fabric run, stage timings on F2: validate 9 s, bronze 91 s, profile 22 s, silver 217 s, gold 108 s, reconcile 7 s. Same results as the local run: OTIF 75%, scrap rate 3%, 121 quarantined rows.
+Fabric results after the full load and the incremental load: revenue CHF 1.82bn, OTIF 75.7%, scrap rate 3.25%, schedule adherence 57.0%, stock value CHF 61.92M, supplier on-time 70.0%, data-quality pass rate 99.97% on the latest run. Stage timings of the first full run on F2: validate 9 s, bronze 91 s, profile 22 s, silver 217 s, gold 108 s, reconcile 7 s.
 
-Local execution proves the logic. It is not the same as a production Fabric deployment: there is no capacity sizing, no workspace security, no deployment pipeline between environments and no monitoring hub. Those are listed under *Production next steps* below.
+## What went wrong in the first Fabric runs
+
+Two problems that the local tests did not catch, and how they were fixed:
+
+1. **The first two incremental runs failed** at the silver stage with `DELTA_MISSING_DELTA_TABLE: silver_sales_orders is not a Delta table`. The reconciliation step registered Spark temporary views named like the lakehouse tables. In a Fabric notebook those views survive a Python kernel restart (they live in the Spark session, not in Python), so the next run's `MERGE` resolved `silver_sales_orders` to a view instead of the Delta table. Fix: views get an `rc_` prefix and are dropped in a `finally` block, and a test checks that no temporary views remain after a run. Both failed runs are kept in `meta_run_summary` and are visible on the *Pipeline runs* report page; the watermark was not moved by them, so the third run reprocessed the same change extract correctly.
+2. **The first report import was rejected** (`definition.pbir: required properties are missing in byConnection`). The PBIR schema accepts a short connection, the Fabric import API does not. Fix: the full live connection (`connectionString`, `pbiServiceModelId`, `pbiModelVirtualServerName`, `pbiModelDatabaseName`, `name`, `connectionType`), with a test that checks it.
+
+Local execution proves the logic, and the Fabric deployment shows it runs on the platform. It is still a portfolio deployment, not a production one: one F2 capacity, one workspace, fictional users, no deployment pipeline between environments and no failure alert yet. Those are listed under *Production next steps* below.
 
 ## Local and Microsoft Fabric mapping
 
@@ -66,8 +79,7 @@ The package is the same in both places. `Lakehouse.detect()` switches between Pa
 
 ## Production next steps
 
-- Incremental loads: process only new extract files (watermark on load date) instead of a full reload. Full reload is fine at this size.
-- Slowly changing dimensions: keep customer and material history (type 2) if segment or standard cost changes need to be reported as of the order date.
-- Environment promotion: Fabric deployment pipelines (dev → test → prod) driven from Git.
-- Alerting: failure path in the Data Pipeline sends an email or Teams message with the run ID and failed stage.
-- Access: workspace roles and row-level security by plant on the semantic model.
+- Alerting: an on-failure activity in `pl_mfg_ops_daily` that sends an e-mail or Teams message with the run ID, failed stage and message from `meta_run_summary`.
+- Environment promotion: Fabric Git integration for the workspace and a deployment pipeline (dev → prod), with deployment rules that point the production model at the production lakehouse.
+- Access: Entra ID groups in the RLS roles, a fixed-identity connection for the Direct Lake model so roles can be tested as a user, workspace roles per audience.
+- Real source: replace the synthetic extracts with D365 data entities exported to the lakehouse (for example through Synapse Link / Fabric Link); the mapping layer in `source_map.py` is the only place that changes.
