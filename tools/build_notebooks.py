@@ -53,6 +53,13 @@ NOTEBOOKS = {
         ("code", SETUP),
         ("code", "from mfgops.pipeline import run_gold\nrun_gold(lh)"),
     ],
+    "04_orchestrated_run": [
+        ("markdown", "# 04 Orchestrated run (scheduled by the Fabric Data Pipeline)\nRuns all stages in order with logging, retries, the quality gate and reconciliation. Raises an error when the run fails, so the pipeline activity turns red and its failure path (alert email) fires."),
+        ("code", SETUP),
+        ("code", "from mfgops.orchestrate import run_pipeline\nres = run_pipeline(lh, max_error_rate=0.02)\nprint(res.run_id, res.status, res.failed_stage, res.message)"),
+        ("code", "display(lh.read('meta', 'pipeline_runs').filter(f\"run_id = '{res.run_id}'\").orderBy('started_at'))"),
+        ("code", "if res.status != 'success':\n    raise RuntimeError(f'Pipeline run {res.run_id} failed at {res.failed_stage}: {res.message}')"),
+    ],
 }
 
 
