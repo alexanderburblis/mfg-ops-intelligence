@@ -1,0 +1,108 @@
+
+==============================================================================
+STEP 1: Baseline run on clean extracts
+==============================================================================
+[validate_sources  ] success    6.5s  rows=68495    11 extracts match their contracts
+[monitor_row_counts] success    0.1s  rows=0        row counts in line with the last successful run
+[bronze            ] success    4.8s  rows=68495    raw extracts landed
+[profile           ] success    6.8s  rows=64       column profile written
+[silver            ] success   13.3s  rows=121      121 rows quarantined
+[quality_gate      ] success    0.0s  rows=0        passed (highest error rate production_orders 0.66%, limit 2%)
+[gold              ] success    4.4s  rows=60357    star schema refreshed
+[reconcile         ] success    1.2s  rows=5        5 of 5 reconciliation checks passed
+→ run 20261125T123916-2259d3: SUCCESS. Gold last refreshed by 20261125T123916-2259d3
+
+==============================================================================
+STEP 2: Defective input: 5% of sales-order lines arrive with plant code 'DE01'
+==============================================================================
+→ 450 of 9000 lines now carry plant 'DE01', which is not in the plant master
+   so_id so_line customer_id plant_id order_qty
+SO102153      10      C00004     DE01        26
+SO100423      20      C00024     DE01        25
+SO102578      10      C00013     DE01        16
+
+==============================================================================
+STEP 3: Pipeline run: validation fails, the gate blocks the gold refresh
+==============================================================================
+[validate_sources  ] success    1.2s  rows=68495    11 extracts match their contracts
+[monitor_row_counts] success    0.2s  rows=0        row counts in line with the last successful run
+[bronze            ] success    2.9s  rows=68495    raw extracts landed
+[profile           ] success    5.0s  rows=64       column profile written
+[silver            ] success    9.6s  rows=568      568 rows quarantined
+[quality_gate      ] failed     0.0s  rows=0        QualityGateError: error rate above 2% in: sales_orders 5.4%. Gold not refreshed, report keeps last good data
+→ run 20261125T123957-69e4d1: FAILED at stage 'quality_gate'
+→ reason: error rate above 2% in: sales_orders 5.4%. Gold not refreshed, report keeps last good data
+→ gold last refreshed by 20261125T123916-2259d3 (the baseline run, so the report is unaffected)
+
+==============================================================================
+STEP 4: Diagnostics: what failed, who owns it, what to do
+==============================================================================
++-------+-------------------+-----------+------------+-------------------+-------------------------------------------------------------+
+|rule_id|table_name         |rows_failed|rows_checked|owner              |corrective_action                                            |
++-------+-------------------+-----------+------------+-------------------+-------------------------------------------------------------+
+|SO-05  |sales_orders       |450        |9000        |ERP / IT           |Fix the plant mapping in the ERP extract                     |
+|IN-01  |inventory_snapshots|25         |37440       |Warehouse          |Post the missing goods receipt or correct the stock          |
+|PR-03  |production_orders  |18         |7008        |Production         |Correct the yield or scrap confirmation                      |
+|PR-01  |production_orders  |16         |7008        |ERP / IT           |Remove the duplicate from the extract and check the interface|
+|SO-01  |sales_orders       |15         |9000        |Customer service   |Create or correct the customer in the ERP master data        |
+|SO-03  |sales_orders       |15         |9000        |Customer service   |Enter the customer's requested date on the order             |
+|PR-02  |production_orders  |12         |7008        |Production planning|Correct the confirmation dates                               |
+|SO-02  |sales_orders       |10         |9000        |Customer service   |Correct the order line quantity                              |
+|DL-01  |deliveries         |10         |8467        |Logistics          |Link the delivery to its order in the ERP                    |
++-------+-------------------+-----------+------------+-------------------+-------------------------------------------------------------+
+
+Sample of quarantined rows:
++--------+-------+--------+------------+
+|so_id   |so_line|plant_id|failed_rules|
++--------+-------+--------+------------+
+|SO100016|30     |DE01    |SO-05       |
+|SO100020|20     |DE01    |SO-05       |
+|SO100033|20     |DE01    |SO-05       |
+|SO100041|10     |DE01    |SO-05       |
+|SO100049|20     |DE01    |SO-05       |
++--------+-------+--------+------------+
+only showing top 5 rows
+
+
+==============================================================================
+STEP 5: Corrective action: ERP / IT fixes the plant mapping and resends the extract
+==============================================================================
+→ sales_orders.csv replaced with the corrected extract
+
+==============================================================================
+STEP 6: Rerun: gate passes, gold refreshed, reconciliation green
+==============================================================================
+[validate_sources  ] success    1.4s  rows=68495    11 extracts match their contracts
+[monitor_row_counts] success    0.2s  rows=0        row counts in line with the last successful run
+[bronze            ] success    3.1s  rows=68495    raw extracts landed
+[profile           ] success    5.6s  rows=64       column profile written
+[silver            ] success    9.1s  rows=121      121 rows quarantined
+[quality_gate      ] success    0.0s  rows=0        passed (highest error rate production_orders 0.66%, limit 2%)
+[gold              ] success    4.3s  rows=60357    star schema refreshed
+[reconcile         ] success    1.2s  rows=5        5 of 5 reconciliation checks passed
+→ run 20261125T124017-6c19eb: SUCCESS. Gold last refreshed by 20261125T124017-6c19eb
+  PASS Sales order quantity, silver vs gold
+  PASS Production good quantity, silver vs gold
+  PASS Inventory snapshot rows, silver vs gold
+  PASS OTIF %, recalculated from silver vs gold flags
+  PASS Scrap rate %, recalculated from silver vs gold
+
+==============================================================================
+STEP +: Bonus: an extract arrives with a column missing
+==============================================================================
+[validate_sources  ] failed     1.3s  rows=0        SourceValidationError: Source validation failed:
+  - deliveries: missing columns ['shipped_qty']
+→ run 20261125T124044-58d45e: FAILED at stage 'validate_sources': nothing was loaded
+→ Source validation failed:
+  - deliveries: missing columns ['shipped_qty']
+
+Run history (meta_pipeline_runs):
++----------------------+------------+--------------------------+
+|run_id                |count(stage)|max(finished_at)          |
++----------------------+------------+--------------------------+
+|20261125T123916-2259d3|8           |2026-11-25 11:39:56.655743|
+|20261125T123957-69e4d1|6           |2026-11-25 11:40:17.076433|
+|20261125T124017-6c19eb|8           |2026-11-25 11:40:43.607631|
+|20261125T124044-58d45e|1           |2026-11-25 11:40:45.622759|
++----------------------+------------+--------------------------+
+
