@@ -55,6 +55,12 @@ def test_planted_defects_are_caught(built, rule_id, planted_key, factor):
     assert _failed(built["lh"], rule_id) == built["planted"][planted_key] * factor
 
 
+def test_bronze_keeps_d365_names_silver_is_canonical(built):
+    lh = built["lh"]
+    assert "SalesOrderNumber" in lh.read("bronze", "sales_orders").columns
+    assert "so_id" in lh.read("silver", "sales_orders").columns
+
+
 def test_bronze_equals_silver_plus_quarantine(built):
     for table, counts in built["silver"].items():
         assert counts["valid"] + counts["quarantined"] == built["bronze"][table], table
@@ -92,8 +98,9 @@ def test_kpis_in_plausible_ranges(built):
 def test_every_fact_key_has_a_dimension_row(built):
     lh = built["lh"]
     facts = lh.read("gold", "fact_sales_order_line")
-    orphans = facts.join(lh.read("gold", "dim_customer"), "customer_id", "left_anti").count()
+    orphans = facts.join(lh.read("gold", "dim_customer"), "customer_sk", "left_anti").count()
     assert orphans == 0
+    assert facts.filter("customer_sk = -1").count() == 0  # every valid order finds a customer version
     orphans = facts.join(lh.read("gold", "dim_material"), "material_id", "left_anti").count()
     assert orphans == 0
 

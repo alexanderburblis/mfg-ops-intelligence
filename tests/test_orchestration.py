@@ -33,10 +33,10 @@ def test_clean_run_succeeds_and_reconciles(env):
 def test_gate_blocks_gold_on_bad_extract(env):
     base, lh = env
     gold_before = lh.read("gold", "fact_sales_order_line").count()
-    path = base / "raw" / "sales_orders.csv"
+    path = base / "raw" / "SalesOrderLinesV2.csv"
     shutil.copy(path, base / "so.bak")
     so = pd.read_csv(path, dtype=str)
-    so.loc[so.sample(frac=0.05, random_state=1).index, "plant_id"] = "DE01"
+    so.loc[so.sample(frac=0.05, random_state=1).index, "ShippingSiteId"] = "DE01"
     so.to_csv(path, index=False)
     res = run_pipeline(lh)
     shutil.move(base / "so.bak", path)
@@ -46,13 +46,13 @@ def test_gate_blocks_gold_on_bad_extract(env):
 
 def test_missing_column_fails_before_loading(env):
     base, lh = env
-    path = base / "raw" / "deliveries.csv"
+    path = base / "raw" / "SalesPackingSlipLines.csv"
     shutil.copy(path, base / "dl.bak")
-    pd.read_csv(path, dtype=str).drop(columns=["shipped_qty"]).to_csv(path, index=False)
+    pd.read_csv(path, dtype=str).drop(columns=["DeliveredQuantity"]).to_csv(path, index=False)
     res = run_pipeline(lh)
     shutil.move(base / "dl.bak", path)
     assert res.status == "failed" and res.failed_stage == "validate_sources"
-    assert "shipped_qty" in res.message
+    assert "DeliveredQuantity" in res.message
 
 
 def test_row_count_monitor():
