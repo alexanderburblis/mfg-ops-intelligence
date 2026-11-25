@@ -9,15 +9,16 @@
 2. Create an environment `env_mfgops`, upload the `.whl` under **Custom libraries**, then publish.
 
 ## 3. Notebooks
-1. Import `notebooks/00`–`03` (**Import → Notebook → From this computer**).
+1. Import `notebooks/00`–`04` (**Import → Notebook → From this computer**).
 2. In each one, attach `lh_mfg_ops` as the default lakehouse and select `env_mfgops` as the environment.
 3. Run `00_generate_source_data` once. It writes the source CSVs to `Files/raw`.
 
 ## 4. Pipeline (orchestration)
 1. Create a Data Pipeline `pl_mfg_ops_daily`.
-2. Add three **Notebook** activities: `01_bronze_ingest` → `02_silver_quality` → `03_gold_star_schema`, each running *on success* of the one before.
-3. Add a schedule (for example daily, 06:00).
-4. Optional: add a failure path, an Office 365 Outlook activity that emails the data owner.
+2. Add one **Notebook** activity running `04_orchestrated_run`. It runs all eight stages, writes `meta_pipeline_runs` and raises an error when the run fails, so the activity turns red.
+3. On the activity's **On fail** path, add an **Office 365 Outlook** (or Teams) activity that sends the run ID and the error to the data owner.
+4. Add a schedule (for example daily, 06:00).
+5. Notebooks `01`–`03` stay available for running a single layer while debugging.
 
 ## 5. Semantic model and report
 1. From the lakehouse, choose **New semantic model** and select the `gold_*` tables.
