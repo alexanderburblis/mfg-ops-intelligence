@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mfgops"
-version = "0.1.0"
+version = "0.2.0"
 description = "Manufacturing operations lakehouse: synthetic ERP/MRP data, PySpark medallion pipeline, data-quality rules"
 requires-python = ">=3.10"
 dependencies = ["pandas>=2.0", "numpy>=1.26"]
@@ -29,3 +29,6 @@ pythonpath = ["src"]
 
 [tool.ruff.lint.per-file-ignores]
 "tools/*" = ["E501"]
+# DAX expressions and report layout read better on one line
+"src/mfgops/model_def.py" = ["E501"]
+"src/mfgops/report_def.py" = ["E501"]
