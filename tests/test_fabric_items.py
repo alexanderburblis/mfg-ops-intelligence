@@ -81,10 +81,13 @@ def test_placeholders_are_filled_and_unfilled_ones_rejected():
 
 
 def test_report_points_at_the_model():
-    cs = connection_string("mfg-ops-intelligence", "1234").replace('"', '\\"')
-    parts = load_parts(REPORT, {"SEMANTIC_MODEL_CONNECTION": cs})
+    cs = connection_string("mfg-ops-intelligence")
+    parts = load_parts(REPORT, {"SEMANTIC_MODEL_CONNECTION": cs, "SEMANTIC_MODEL_ID": "1234"})
     pbir = json.loads(base64.b64decode(next(p for p in parts if p["path"] == "definition.pbir")["payload"]))
-    assert pbir["datasetReference"]["byConnection"]["connectionString"].endswith("semanticmodelid=1234")
+    conn = pbir["datasetReference"]["byConnection"]
+    assert conn["pbiModelDatabaseName"] == "1234"
+    assert conn["connectionType"] == "pbiServiceXmlaStyleLive"
+    assert "Initial Catalog=sm_mfg_ops" in conn["connectionString"]
 
 
 class _Resp:
