@@ -20,44 +20,58 @@ def _scalar(lh: Lakehouse, sql: str):
     return lh.spark.sql(sql).first()[0]
 
 
+VIEW_PREFIX = "rc_"  # temp views must not shadow the lakehouse tables of the same name in Fabric
+
+
 def reconcile(lh: Lakehouse) -> list[dict]:
+    views = []
     for layer, names in {
         "silver": ["sales_orders", "deliveries", "production_orders", "inventory_snapshots", "materials"],
         "gold": ["fact_sales_order_line", "fact_production_order", "fact_inventory_snapshot"],
     }.items():
         for n in names:
-            lh.read(layer, n).createOrReplaceTempView(f"{layer}_{n}")
+            view = f"{VIEW_PREFIX}{layer}_{n}"
+            lh.read(layer, n).createOrReplaceTempView(view)
+            views.append(view)
+    try:
+        return _run_checks(lh)
+    finally:
+        for v in views:
+            lh.spark.catalog.dropTempView(v)
+
+
+def _run_checks(lh: Lakehouse) -> list[dict]:
 
     checks = [
         (
             "Sales order quantity, silver vs gold",
-            "SELECT SUM(order_qty) FROM silver_sales_orders",
-            "SELECT SUM(order_qty) FROM gold_fact_sales_order_line",
+            "SELECT SUM(order_qty) FROM rc_silver_sales_orders",
+            "SELECT SUM(order_qty) FROM rc_gold_fact_sales_order_line",
         ),
         (
             "Production good quantity, silver vs gold",
-            "SELECT SUM(good_qty) FROM silver_production_orders",
-            "SELECT SUM(good_qty) FROM gold_fact_production_order",
+            "SELECT SUM(good_qty) FROM rc_silver_production_orders",
+            "SELECT SUM(good_qty) FROM rc_gold_fact_production_order",
         ),
         (
             "Inventory snapshot rows, silver vs gold",
-            "SELECT COUNT(*) FROM silver_inventory_snapshots",
-            "SELECT COUNT(*) FROM gold_fact_inventory_snapshot",
+            "SELECT COUNT(*) FROM rc_silver_inventory_snapshots",
+            "SELECT COUNT(*) FROM rc_gold_fact_inventory_snapshot",
         ),
         (
             "OTIF %, recalculated from silver vs gold flags",
             """
             WITH d AS (SELECT so_id, so_line, MAX(actual_ship_date) AS ship, SUM(shipped_qty) AS qty
-                       FROM silver_deliveries GROUP BY so_id, so_line)
+                       FROM rc_silver_deliveries GROUP BY so_id, so_line)
             SELECT AVG(CASE WHEN d.ship <= s.requested_date AND d.qty >= s.order_qty THEN 1.0 ELSE 0.0 END)
-            FROM silver_sales_orders s JOIN d USING (so_id, so_line)
+            FROM rc_silver_sales_orders s JOIN d USING (so_id, so_line)
             """,
-            "SELECT AVG(CASE WHEN is_otif THEN 1.0 ELSE 0.0 END) FROM gold_fact_sales_order_line WHERE is_shipped",
+            "SELECT AVG(CASE WHEN is_otif THEN 1.0 ELSE 0.0 END) FROM rc_gold_fact_sales_order_line WHERE is_shipped",
         ),
         (
             "Scrap rate %, recalculated from silver vs gold",
-            "SELECT SUM(scrap_qty) / SUM(good_qty + scrap_qty) FROM silver_production_orders WHERE status = 'Ended'",
-            "SELECT SUM(scrap_qty) / SUM(output_qty) FROM gold_fact_production_order WHERE is_completed",
+            "SELECT SUM(scrap_qty) / SUM(good_qty + scrap_qty) FROM rc_silver_production_orders WHERE status = 'Ended'",
+            "SELECT SUM(scrap_qty) / SUM(output_qty) FROM rc_gold_fact_production_order WHERE is_completed",
         ),
     ]
     results = []
