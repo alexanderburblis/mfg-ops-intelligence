@@ -76,8 +76,16 @@ def run_bronze(lh: Lakehouse) -> dict[str, int]:
 
 # --------------------------------------------------------------------------- silver
 def _typed(df: DataFrame, name: str) -> DataFrame:
+    """Cast columns to their silver types and count values that fail to convert."""
     df = df.drop("_source_file")
-    for col, typ in SCHEMA.get(name, {}).items():
+    casts = SCHEMA.get(name, {})
+    if not casts:
+        return df
+    bad = F.lit(0)
+    for col, typ in casts.items():
+        bad = bad + (F.col(col).isNotNull() & F.col(col).cast(typ).isNull()).cast("int")
+    df = df.withColumn("_ref_type_errors", bad)
+    for col, typ in casts.items():
         df = df.withColumn(col, F.col(col).cast(typ))
     return df
 
@@ -91,7 +99,12 @@ def _with_ref_columns(lh: Lakehouse, df: DataFrame, name: str) -> DataFrame:
             .distinct()
             .withColumn("_ref_customer_known", F.lit(True))
         )
-        return df.join(known, "customer_id", "left").fillna({"_ref_customer_known": False})
+        plants = lh.read("bronze", "plants").select("plant_id").distinct().withColumn("_ref_plant_known", F.lit(True))
+        return (
+            df.join(known, "customer_id", "left")
+            .join(plants, "plant_id", "left")
+            .fillna({"_ref_customer_known": False, "_ref_plant_known": False})
+        )
     if name == "deliveries":
         lines = (
             lh.read("bronze", "sales_orders")
@@ -115,9 +128,12 @@ def run_silver(lh: Lakehouse, run_id: str | None = None) -> dict[str, dict[str, 
         valid = valid.drop("_ingested_at").withColumn("_silver_run_id", F.lit(run_id))
         lh.write(valid, "silver", name)
         q = quarantine.count()
-        if q:
-            lh.write(quarantine, "quarantine", name)
-        summary[name] = {"valid": valid.count(), "quarantined": q}
+        lh.write(quarantine, "quarantine", name)  # always overwrite, so a fixed table shows an empty quarantine
+        summary[name] = {
+            "valid": valid.count(),
+            "quarantined": q,
+            "error_rate": round(q / max(q + valid.count(), 1), 4),
+        }
         all_results = results if all_results is None else all_results.unionByName(results)
     if all_results is not None:
         lh.append(all_results, "gold", "dq_results")

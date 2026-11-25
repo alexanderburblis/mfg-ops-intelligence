@@ -34,6 +34,7 @@ def get_spark(app_name: str = "mfgops") -> SparkSession:
         .config("spark.sql.shuffle.partitions", "4")
         .config("spark.sql.session.timeZone", "UTC")
         .config("spark.ui.enabled", "false")
+        .config("spark.ui.showConsoleProgress", "false")
         .getOrCreate()
     )
 
