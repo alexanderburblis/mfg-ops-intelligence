@@ -26,22 +26,26 @@ Every stage writes its status, timing, row count and message to `meta_pipeline_r
 
 ## What is implemented, tested and deployed
 
+Deployed on 25 November 2026 to a Microsoft Fabric workspace (`mfg-ops-intelligence`, F2 capacity, Switzerland North).
+
 | Capability | Implemented | Tested automatically | Runs in Fabric |
 |---|---|---|---|
-| Synthetic ERP/MRP source data with planted defects | yes | yes | written for it, not yet deployed |
-| Source contracts and schema validation | yes | yes (missing column test) | not yet |
-| Row-count monitoring against last good run | yes | yes (unit test) | not yet |
-| Bronze / silver / gold in PySpark | yes | yes | not yet |
-| Column profiling (`meta_column_profile`) | yes | indirectly | not yet |
-| 25 data-quality rules with owner and corrective action | yes | yes (every planted defect caught) | not yet |
-| Quarantine tables | yes | yes | not yet |
-| Quality gate protecting gold | yes | yes (gold unchanged after a bad run) | not yet |
-| Retries with backoff for transient errors | yes | no (needs a flaky dependency to test) | not yet |
-| Reconciliation: silver vs gold totals, KPI recalculation | yes | yes | not yet |
+| Synthetic ERP/MRP source data with planted defects | yes | yes | yes, written to `Files/raw` of `lh_mfg_ops` |
+| Source contracts and schema validation | yes | yes (missing column test) | yes |
+| Row-count monitoring against last good run | yes | yes (unit test) | yes |
+| Bronze / silver / gold in PySpark | yes | yes | yes, as Delta tables |
+| Column profiling (`meta_column_profile`) | yes | indirectly | yes |
+| 25 data-quality rules with owner and corrective action | yes | yes (every planted defect caught) | yes, 121 rows quarantined, 8 rules failing |
+| Quarantine tables | yes | yes | yes |
+| Quality gate protecting gold | yes | yes (gold unchanged after a bad run) | yes |
+| Retries with backoff for transient errors | yes | no (needs a flaky dependency to test) | yes, plus activity retries in the Data Pipeline |
+| Reconciliation: silver vs gold totals, KPI recalculation | yes | yes | yes, 5 of 5 passed |
 | CI: lint, tests, wheel build on every push | yes | runs on GitHub | n/a |
-| Semantic model: relationships, 26 DAX measures | defined in `semantic-model/` | no | not yet |
-| Power BI report | not yet | – | – |
-| Fabric Data Pipeline schedule and alert | documented in `fabric-setup.md` | – | not yet |
+| Orchestration | `orchestrate.py` | yes | Data Pipeline `pl_mfg_ops_daily` running notebook `nb_04_orchestrated_run` |
+| Semantic model | 11 gold tables, 14 relationships, 22 measures | measures checked by DAX query against the pipeline output | yes, Direct Lake model `sm_mfg_ops` |
+| Power BI report pages | not yet | – | – |
+
+First Fabric run, stage timings on F2: validate 9 s, bronze 91 s, profile 22 s, silver 217 s, gold 108 s, reconcile 7 s. Same results as the local run: OTIF 75%, scrap rate 3%, 121 quarantined rows.
 
 Local execution proves the logic. It is not the same as a production Fabric deployment: there is no capacity sizing, no workspace security, no deployment pipeline between environments and no monitoring hub. Those are listed under *Production next steps* below.
 

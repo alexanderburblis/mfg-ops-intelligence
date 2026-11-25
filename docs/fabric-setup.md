@@ -1,5 +1,23 @@
 # Deploying to Microsoft Fabric
 
+This is how the project was deployed on 25 November 2026. The free Fabric trial was not offered to the new tenant, so it runs on a pay-as-you-go **F2** capacity, paused when not in use.
+
+## 0. Capacity (once)
+1. Free Azure account, then a work account in Microsoft Entra ID (Fabric does not accept personal Microsoft accounts).
+2. Give the work account the Contributor role on the subscription, and set up MFA.
+3. As the work account, create a Fabric capacity in the Azure portal: size F2, overage protection off, capacity admin = the work account. **Pause it after every session** (Azure portal → capacity → Pause).
+
+## Quick path used for the first deployment
+Instead of uploading a wheel, the notebook installs the package straight from GitHub:
+
+```
+%pip install https://github.com/alexanderburblis/mfg-ops-intelligence/archive/refs/heads/main.zip --quiet
+```
+
+The Data Pipeline's notebook activity passes the base parameter `_inlineInstallationEnabled = true` (Bool), which allows `%pip` in scheduled runs. For production, pin a version (a tag or the CI wheel in an Environment) instead of `main`.
+
+Relationships were added with the TMDL script in `semantic-model/relationships.tmdl` (TMDL view → Apply). Measures were added with `semantic-model/measures_deployed.dax` (DAX query view → Run → Update model with changes).
+
 ## 1. Workspace and lakehouse
 1. In Fabric, create a workspace `mfg-ops-intelligence` on the trial capacity.
 2. Create a lakehouse named `lh_mfg_ops`.
