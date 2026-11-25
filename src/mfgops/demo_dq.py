@@ -58,16 +58,17 @@ def main() -> None:
     print(f"→ run {r1.run_id}: {r1.status.upper()}. Gold last refreshed by {last_gold_refresh(lh)}")
 
     banner(2, "Defective input: 5% of sales-order lines arrive with plant code 'DE01'")
-    so_path = RAW / "sales_orders.csv"
-    good_copy = RAW / "sales_orders.good.bak"
+    so_path = RAW / "SalesOrderLinesV2.csv"
+    good_copy = RAW / "SalesOrderLinesV2.good.bak"
     shutil.copy(so_path, good_copy)
     so = pd.read_csv(so_path, dtype=str)
     rng = np.random.default_rng(1)
     idx = rng.choice(so.index, size=int(len(so) * 0.05), replace=False)
-    so.loc[idx, "plant_id"] = "DE01"
+    so.loc[idx, "ShippingSiteId"] = "DE01"
     so.to_csv(so_path, index=False)
     print(f"→ {len(idx)} of {len(so)} lines now carry plant 'DE01', which is not in the plant master")
-    print(so.loc[idx[:3], ["so_id", "so_line", "customer_id", "plant_id", "order_qty"]].to_string(index=False))
+    cols = ["SalesOrderNumber", "LineCreationSequenceNumber", "OrderingCustomerAccountNumber", "ShippingSiteId"]
+    print(so.loc[idx[:3], cols].to_string(index=False))
 
     banner(3, "Pipeline run: validation fails, the gate blocks the gold refresh")
     r2 = run_pipeline(lh)
@@ -86,7 +87,7 @@ def main() -> None:
 
     banner(5, "Corrective action: ERP / IT fixes the plant mapping and resends the extract")
     shutil.move(good_copy, so_path)
-    print("→ sales_orders.csv replaced with the corrected extract")
+    print("→ SalesOrderLinesV2.csv replaced with the corrected extract")
 
     banner(6, "Rerun: gate passes, gold refreshed, reconciliation green")
     r3 = run_pipeline(lh)
@@ -95,8 +96,8 @@ def main() -> None:
         print(("  PASS " if c["passed"] else "  FAIL ") + c["check"])
 
     banner("+", "Bonus: an extract arrives with a column missing")
-    pd.read_csv(RAW / "deliveries.csv", dtype=str).drop(columns=["shipped_qty"]).to_csv(
-        RAW / "deliveries.csv", index=False
+    pd.read_csv(RAW / "SalesPackingSlipLines.csv", dtype=str).drop(columns=["DeliveredQuantity"]).to_csv(
+        RAW / "SalesPackingSlipLines.csv", index=False
     )
     r4 = run_pipeline(lh)
     print(f"→ run {r4.run_id}: {r4.status.upper()} at stage '{r4.failed_stage}': nothing was loaded")

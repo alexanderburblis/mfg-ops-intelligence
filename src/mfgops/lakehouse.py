@@ -8,6 +8,7 @@ know which one it is running on.
 
 from __future__ import annotations
 
+import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -53,6 +54,7 @@ class Lakehouse:
         return cls(spark, root=root, raw_path=raw_path, fabric=False)
 
     def read_raw(self, name: str) -> DataFrame:
+        """Read ``<raw_path>/<name>.csv`` as text columns."""
         return (
             self.spark.read.option("header", True)
             .option("inferSchema", False)  # bronze keeps everything as text, typing happens in silver
@@ -80,3 +82,44 @@ class Lakehouse:
         if self.fabric:
             return self.spark.read.table(self._table(layer, name))
         return self.spark.read.parquet(str(Path(self.root) / layer / name))
+
+    def exists(self, layer: str, name: str) -> bool:
+        if self.fabric:
+            return self.spark.catalog.tableExists(self._table(layer, name))
+        return (Path(self.root) / layer / name).exists()
+
+    def merge(self, df: DataFrame, layer: str, name: str, keys: list[str] | tuple[str, ...]) -> dict[str, int]:
+        """Upsert ``df`` into a table by business key: matching rows are replaced, new rows inserted.
+
+        In Fabric this is a Delta ``MERGE``. Locally (plain Parquet, no Delta
+        runtime) the same result is produced by keeping the existing rows
+        whose key is not in ``df`` and adding ``df``. Returns updated and
+        inserted row counts.
+        """
+        df = df.cache()
+        incoming = df.count()
+        if not self.exists(layer, name):
+            self.write(df, layer, name)
+            return {"updated": 0, "inserted": incoming}
+        current = self.read(layer, name)
+        updated = current.join(df.select(*keys).distinct(), list(keys), "left_semi").count()
+        if self.fabric:
+            from delta.tables import DeltaTable  # available in every Fabric Spark runtime
+
+            cond = " AND ".join(f"t.`{k}` <=> s.`{k}`" for k in keys)
+            (
+                DeltaTable.forName(self.spark, self._table(layer, name))
+                .alias("t")
+                .merge(df.alias("s"), cond)
+                .whenMatchedUpdateAll()
+                .whenNotMatchedInsertAll()
+                .execute()
+            )
+        else:
+            path = Path(self.root) / layer / name
+            tmp = path.with_name(name + "__merge_tmp")
+            kept = current.join(df.select(*keys).distinct(), list(keys), "left_anti")
+            kept.unionByName(df, allowMissingColumns=True).write.mode("overwrite").parquet(str(tmp))
+            shutil.rmtree(path)
+            tmp.rename(path)
+        return {"updated": updated, "inserted": incoming - updated}

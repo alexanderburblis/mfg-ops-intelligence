@@ -1,7 +1,8 @@
 """Source contracts, schema validation and profiling, run before anything is loaded.
 
 A source extract is only loaded if it matches its contract: the file exists,
-it has exactly the expected columns, and it is not empty. A broken extract
+it has exactly the expected columns (the D365 entity fields from
+``source_map`` plus ``ModifiedDateTime``), and it is not empty. A broken extract
 fails the load with a clear message instead of silently producing nulls
 further down the pipeline.
 """
@@ -14,62 +15,10 @@ from pyspark.sql import DataFrame
 from pyspark.sql import functions as F
 
 from mfgops.lakehouse import Lakehouse
+from mfgops.source_map import ENTITIES
 
-# Column contract per source extract (order does not matter, names and count do).
-CONTRACTS: dict[str, list[str]] = {
-    "plants": ["plant_id", "plant_name", "country", "currency"],
-    "materials": [
-        "material_id",
-        "description",
-        "material_type",
-        "product_family",
-        "base_uom",
-        "standard_cost_chf",
-        "safety_stock_qty",
-        "lead_time_days",
-    ],
-    "bom": ["parent_material_id", "component_material_id", "qty_per"],
-    "work_centers": ["work_center_id", "plant_id", "work_center_name", "capacity_hours_per_day"],
-    "customers": ["customer_id", "customer_name", "region", "segment"],
-    "suppliers": ["supplier_id", "supplier_name", "country"],
-    "sales_orders": [
-        "so_id",
-        "so_line",
-        "customer_id",
-        "material_id",
-        "plant_id",
-        "order_date",
-        "requested_date",
-        "order_qty",
-        "net_price_chf",
-    ],
-    "deliveries": ["delivery_id", "so_id", "so_line", "actual_ship_date", "shipped_qty"],
-    "production_orders": [
-        "prod_order_id",
-        "plant_id",
-        "material_id",
-        "work_center_id",
-        "planned_start",
-        "planned_finish",
-        "actual_start",
-        "actual_finish",
-        "planned_qty",
-        "good_qty",
-        "scrap_qty",
-        "status",
-    ],
-    "inventory_snapshots": ["snapshot_date", "plant_id", "material_id", "on_hand_qty"],
-    "purchase_orders": [
-        "purchase_order_id",
-        "supplier_id",
-        "material_id",
-        "plant_id",
-        "order_date",
-        "promised_date",
-        "received_date",
-        "order_qty",
-    ],
-}
+# Column contract per source extract: the D365-shaped columns plus the change-tracking timestamp.
+CONTRACTS: dict[str, list[str]] = {name: e.source_columns for name, e in ENTITIES.items()}
 
 
 class SourceValidationError(RuntimeError):
@@ -80,24 +29,35 @@ class SourceValidationError(RuntimeError):
         super().__init__("Source validation failed:\n  - " + "\n  - ".join(problems))
 
 
-def validate_sources(lh: Lakehouse) -> dict[str, int]:
-    """Check every extract against its contract. Return row counts, or raise with every problem found."""
+def validate_sources(lh: Lakehouse, incremental: bool = False) -> dict[str, int]:
+    """Check every extract against its contract. Return row counts, or raise with every problem found.
+
+    A full load needs every extract and none may be empty. An incremental load
+    only receives the entities that changed, so a missing or empty extract
+    means "no changes" there, but an extract that is present must still match
+    its contract.
+    """
     problems, counts = [], {}
     for name, expected in CONTRACTS.items():
+        file = ENTITIES[name].file
         try:
-            df = lh.read_raw(name)
+            df = lh.read_raw(file)
+            df.columns  # noqa: B018  (forces the read)
         except Exception as exc:  # missing file, unreadable file
-            problems.append(f"{name}: cannot read source file ({type(exc).__name__})")
+            if incremental:
+                counts[name] = 0
+                continue
+            problems.append(f"{file}: cannot read source file ({type(exc).__name__})")
             continue
-        missing = sorted(set(expected) - set(df.columns))
-        extra = sorted(set(df.columns) - set(expected))
+        missing = [c for c in expected if c not in df.columns]
+        extra = [c for c in df.columns if c not in expected]
         if missing:
-            problems.append(f"{name}: missing columns {missing}")
+            problems.append(f"{file}: missing columns {missing}")
         if extra:
-            problems.append(f"{name}: unexpected columns {extra}")
+            problems.append(f"{file}: unexpected columns {extra}")
         n = df.count()
-        if n == 0:
-            problems.append(f"{name}: file is empty")
+        if n == 0 and not incremental:
+            problems.append(f"{file}: file is empty")
         counts[name] = n
     if problems:
         raise SourceValidationError(problems)

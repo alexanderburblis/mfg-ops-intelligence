@@ -3,6 +3,7 @@
 Usage:
     python -m mfgops.run_local                 # clean lakehouse, generate, run
     python -m mfgops.run_local --skip-generate # rerun on the existing extracts
+    python -m mfgops.run_local --with-increment # full load, then the 15 Nov change extract
 """
 
 from __future__ import annotations
@@ -11,7 +12,7 @@ import argparse
 import json
 import shutil
 
-from mfgops.generate import generate
+from mfgops.generate import generate, generate_increment
 from mfgops.lakehouse import Lakehouse, get_spark
 from mfgops.orchestrate import run_pipeline
 
@@ -23,6 +24,8 @@ def main() -> None:
     p.add_argument("--skip-generate", action="store_true")
     p.add_argument("--keep-lakehouse", action="store_true", help="keep run history from earlier runs")
     p.add_argument("--seed", type=int, default=42)
+    p.add_argument("--with-increment", action="store_true", help="then load the 15 Nov 2026 change extract")
+    p.add_argument("--increment-dir", default="data/increments/2026-11-15")
     a = p.parse_args()
 
     if not a.skip_generate:
@@ -41,6 +44,25 @@ def main() -> None:
         ).orderBy("rule_id").show(50, truncate=False)
         for c in res.outputs["reconciliation"]:
             print(("PASS " if c["passed"] else "FAIL ") + c["check"])
+    if a.with_increment and res.status == "success":
+        print("Change extract:", generate_increment(a.increment_dir, a.seed))
+        lh.raw_path = a.increment_dir
+        inc = run_pipeline(lh, mode="incremental")
+        print(json.dumps({"run_id": inc.run_id, "mode": inc.mode, "status": inc.status, "message": inc.message}))
+        hist = lh.read("silver", "customers_history")
+        moved = hist.filter("NOT is_current").select("customer_id")
+        print("Customer history for customers that changed segment (SCD type 2):")
+        hist.join(moved, "customer_id").orderBy("customer_id", "valid_from").show(20, truncate=False)
+        lh.read("meta", "run_summary").select(
+            "run_id",
+            "load_mode",
+            "status",
+            "seconds",
+            "rows_received",
+            "rows_quarantined",
+            "rows_inserted",
+            "rows_updated",
+        ).show(truncate=False)
     spark.stop()
 
 

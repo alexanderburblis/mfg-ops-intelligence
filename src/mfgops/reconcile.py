@@ -56,7 +56,7 @@ def reconcile(lh: Lakehouse) -> list[dict]:
         ),
         (
             "Scrap rate %, recalculated from silver vs gold",
-            "SELECT SUM(scrap_qty) / SUM(good_qty + scrap_qty) FROM silver_production_orders WHERE status = 'TECO'",
+            "SELECT SUM(scrap_qty) / SUM(good_qty + scrap_qty) FROM silver_production_orders WHERE status = 'Ended'",
             "SELECT SUM(scrap_qty) / SUM(output_qty) FROM gold_fact_production_order WHERE is_completed",
         ),
     ]
