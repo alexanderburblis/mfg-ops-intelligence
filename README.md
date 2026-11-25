@@ -16,10 +16,10 @@ Screenshots of the deployed report (25 November 2026, after one full load and on
 
 | | |
 |---|---|
-| ![Overview](docs/screenshots/01-overview.png) **Overview** | ![Delivery](docs/screenshots/02-delivery.png) **Delivery**: OTIF against the 90% target, drill-through to customer orders |
-| ![Production](docs/screenshots/03-production.png) **Production**: scrap, schedule adherence, drill-through to work-centre orders | ![Inventory](docs/screenshots/04-inventory.png) **Inventory**: stock value, safety stock, days of coverage |
-| ![Purchasing](docs/screenshots/05-purchasing.png) **Purchasing**: supplier on-time delivery | ![Data quality](docs/screenshots/06-data-quality.png) **Data quality**: pass rate per run, failing rules with owner and action |
-| ![Pipeline runs](docs/screenshots/07-pipeline-runs.png) **Pipeline runs**: run history from `meta_run_summary`, including two failed incremental runs (see [architecture](docs/architecture.md#what-went-wrong-in-the-first-fabric-runs)) | |
+| ![Overview](docs/screenshots/01-overview.svg) **Overview** | ![Delivery](docs/screenshots/02-delivery.svg) **Delivery**: OTIF against the 90% target, drill-through to customer orders |
+| ![Production](docs/screenshots/03-production.svg) **Production**: scrap, schedule adherence, drill-through to work-centre orders | ![Inventory](docs/screenshots/04-inventory.svg) **Inventory**: stock value, safety stock, days of coverage |
+| ![Purchasing](docs/screenshots/05-purchasing.svg) **Purchasing**: supplier on-time delivery | ![Data quality](docs/screenshots/06-data-quality.svg) **Data quality**: pass rate per run, failing rules with owner and action |
+| ![Pipeline runs](docs/screenshots/07-pipeline-runs.svg) **Pipeline runs**: run history from `meta_run_summary`, including two failed incremental runs (see [architecture](docs/architecture.md#what-went-wrong-in-the-first-fabric-runs)) | |
 
 ## The central demonstration: a bad extract is caught, fixed and reprocessed
 
