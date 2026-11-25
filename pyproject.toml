@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mfgops"
+version = "0.1.0"
+description = "Manufacturing operations lakehouse: synthetic ERP/MRP data, PySpark medallion pipeline, data-quality rules"
+requires-python = ">=3.10"
+dependencies = ["pandas>=2.0", "numpy>=1.26"]
+
+[project.optional-dependencies]
+spark = ["pyspark==3.5.3"]
+dev = ["pyspark==3.5.3", "pyarrow>=15", "pytest>=8", "ruff>=0.6"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff.lint.per-file-ignores]
+"tools/*" = ["E501"]
