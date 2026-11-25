@@ -1,0 +1,41 @@
+table gold_dim_work_center
+	lineageTag: 94c20afd-e1e9-5374-a679-461cdc7d237f
+
+	column work_center_id
+		dataType: string
+		lineageTag: 3ce2e25d-5d7b-538b-9b28-f194c7659107
+		summarizeBy: none
+		sourceColumn: work_center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_id
+		dataType: string
+		lineageTag: 42bb744a-0319-58c6-abc5-d2e9a31f8dc9
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column work_center_name
+		dataType: string
+		lineageTag: 27e762e3-e72e-584e-8fef-d29095ff4237
+		summarizeBy: none
+		sourceColumn: work_center_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column capacity_hours_per_day
+		dataType: int64
+		lineageTag: eff2bd8f-ad2e-55a7-9b70-d819b4f5f000
+		summarizeBy: sum
+		sourceColumn: capacity_hours_per_day
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_work_center = entity
+		mode: directLake
+		source
+			entityName: gold_dim_work_center
+			schemaName: dbo
+			expressionSource: DatabaseQuery

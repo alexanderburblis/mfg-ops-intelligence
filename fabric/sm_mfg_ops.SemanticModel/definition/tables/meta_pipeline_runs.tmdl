@@ -1,0 +1,90 @@
+/// One row per pipeline stage and attempt.
+table meta_pipeline_runs
+	lineageTag: ee0a176b-45f2-5a30-b503-cfe87fbaf437
+
+	measure 'Avg Stage Seconds' = AVERAGE ( meta_pipeline_runs[seconds] )
+		formatString: #,0.0
+		displayFolder: Monitoring
+		lineageTag: 53dff92d-8109-5e67-af19-74f389807ac9
+
+	column run_id
+		dataType: string
+		lineageTag: 181b265d-6be2-557d-8d62-c085c7f00894
+		summarizeBy: none
+		sourceColumn: run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column stage
+		dataType: string
+		lineageTag: a7f08df0-6f80-5382-b064-53339fa13b07
+		summarizeBy: none
+		sourceColumn: stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: f1c52ea6-9a52-5d3a-9d08-839e13fd8e28
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column attempt
+		dataType: int64
+		lineageTag: ab719dae-a156-50cd-ac33-374ffc4531ba
+		summarizeBy: none
+		sourceColumn: attempt
+
+		annotation SummarizationSetBy = Automatic
+
+	column started_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: 88607400-ae74-5a87-86d1-efe25ffd0e36
+		summarizeBy: none
+		sourceColumn: started_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column finished_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: da84d3d9-9370-58c0-9032-2df148b017c5
+		summarizeBy: none
+		sourceColumn: finished_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column seconds
+		dataType: double
+		formatString: #,0.0
+		lineageTag: dee28bda-25de-5b94-b326-d45f2dc3f4d4
+		summarizeBy: sum
+		sourceColumn: seconds
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows
+		dataType: int64
+		lineageTag: e9bfc1c9-394a-57e9-883c-6af748601629
+		summarizeBy: sum
+		sourceColumn: rows
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		lineageTag: e243529e-59cf-58ca-b3f6-c42d7bccae82
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	partition meta_pipeline_runs = entity
+		mode: directLake
+		source
+			entityName: meta_pipeline_runs
+			schemaName: dbo
+			expressionSource: DatabaseQuery

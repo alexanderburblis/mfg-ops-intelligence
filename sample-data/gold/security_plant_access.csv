@@ -1,0 +1,7 @@
+user_principal_name,plant_id
+plant.manager.ch01@nordhalde.example,CH01
+plant.manager.my01@nordhalde.example,MY01
+plant.manager.ro01@nordhalde.example,RO01
+ops.director@nordhalde.example,CH01
+ops.director@nordhalde.example,MY01
+ops.director@nordhalde.example,RO01

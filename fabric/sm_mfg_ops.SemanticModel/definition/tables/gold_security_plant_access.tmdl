@@ -1,0 +1,27 @@
+/// Row-level security: plants each user may see.
+table gold_security_plant_access
+	lineageTag: e14426e5-82e0-5cce-9bf9-874034824e4e
+	isHidden
+
+	column user_principal_name
+		dataType: string
+		lineageTag: c47837aa-74f2-5811-9a66-cde023f28299
+		summarizeBy: none
+		sourceColumn: user_principal_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_id
+		dataType: string
+		lineageTag: 39b5614d-5f08-5681-b91e-5c44586913e8
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_security_plant_access = entity
+		mode: directLake
+		source
+			entityName: gold_security_plant_access
+			schemaName: dbo
+			expressionSource: DatabaseQuery

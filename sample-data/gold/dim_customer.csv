@@ -1,121 +1,131 @@
-customer_id,customer_name,region,segment
-C00001,Customer 001,Americas,Semiconductor
-C00002,Customer 002,EMEA,Industrial
-C00003,Customer 003,Americas,Display
-C00004,Customer 004,Greater China,Semiconductor
-C00005,Customer 005,Greater China,Industrial
-C00006,Customer 006,Asia-Pacific,Semiconductor
-C00007,Customer 007,EMEA,Display
-C00008,Customer 008,Asia-Pacific,Semiconductor
-C00009,Customer 009,Americas,Semiconductor
-C00010,Customer 010,Asia-Pacific,Semiconductor
-C00011,Customer 011,Asia-Pacific,Semiconductor
-C00012,Customer 012,EMEA,Semiconductor
-C00013,Customer 013,Greater China,Semiconductor
-C00014,Customer 014,Americas,Solar
-C00015,Customer 015,Asia-Pacific,Research
-C00016,Customer 016,Greater China,Display
-C00017,Customer 017,Greater China,Display
-C00018,Customer 018,Greater China,Solar
-C00019,Customer 019,Asia-Pacific,Industrial
-C00020,Customer 020,Greater China,Industrial
-C00021,Customer 021,Asia-Pacific,Semiconductor
-C00022,Customer 022,Americas,Semiconductor
-C00023,Customer 023,Greater China,Display
-C00024,Customer 024,EMEA,Display
-C00025,Customer 025,Asia-Pacific,Solar
-C00026,Customer 026,Greater China,Solar
-C00027,Customer 027,Americas,Semiconductor
-C00028,Customer 028,EMEA,Display
-C00029,Customer 029,Greater China,Solar
-C00030,Customer 030,Greater China,Semiconductor
-C00031,Customer 031,EMEA,Industrial
-C00032,Customer 032,EMEA,Semiconductor
-C00033,Customer 033,Americas,Industrial
-C00034,Customer 034,Asia-Pacific,Semiconductor
-C00035,Customer 035,Greater China,Industrial
-C00036,Customer 036,Greater China,Industrial
-C00037,Customer 037,EMEA,Industrial
-C00038,Customer 038,Americas,Industrial
-C00039,Customer 039,Asia-Pacific,Research
-C00040,Customer 040,Asia-Pacific,Research
-C00041,Customer 041,Asia-Pacific,Research
-C00042,Customer 042,Asia-Pacific,Semiconductor
-C00043,Customer 043,Greater China,Solar
-C00044,Customer 044,Americas,Solar
-C00045,Customer 045,Greater China,Industrial
-C00046,Customer 046,Greater China,Solar
-C00047,Customer 047,Greater China,Display
-C00048,Customer 048,Asia-Pacific,Research
-C00049,Customer 049,EMEA,Display
-C00050,Customer 050,EMEA,Semiconductor
-C00051,Customer 051,Americas,Solar
-C00052,Customer 052,EMEA,Solar
-C00053,Customer 053,Asia-Pacific,Display
-C00054,Customer 054,Americas,Display
-C00055,Customer 055,Asia-Pacific,Display
-C00056,Customer 056,Asia-Pacific,Display
-C00057,Customer 057,Americas,Display
-C00058,Customer 058,EMEA,Research
-C00059,Customer 059,EMEA,Display
-C00060,Customer 060,Greater China,Industrial
-C00061,Customer 061,Asia-Pacific,Industrial
-C00062,Customer 062,Greater China,Solar
-C00063,Customer 063,Greater China,Display
-C00064,Customer 064,Americas,Solar
-C00065,Customer 065,Greater China,Industrial
-C00066,Customer 066,Americas,Research
-C00067,Customer 067,EMEA,Industrial
-C00068,Customer 068,Asia-Pacific,Solar
-C00069,Customer 069,Greater China,Research
-C00070,Customer 070,EMEA,Display
-C00071,Customer 071,EMEA,Research
-C00072,Customer 072,EMEA,Display
-C00073,Customer 073,Asia-Pacific,Research
-C00074,Customer 074,Asia-Pacific,Industrial
-C00075,Customer 075,Greater China,Semiconductor
-C00076,Customer 076,Greater China,Research
-C00077,Customer 077,Asia-Pacific,Semiconductor
-C00078,Customer 078,Asia-Pacific,Research
-C00079,Customer 079,Asia-Pacific,Semiconductor
-C00080,Customer 080,Asia-Pacific,Industrial
-C00081,Customer 081,Asia-Pacific,Semiconductor
-C00082,Customer 082,Greater China,Industrial
-C00083,Customer 083,EMEA,Industrial
-C00084,Customer 084,Americas,Solar
-C00085,Customer 085,Americas,Research
-C00086,Customer 086,Greater China,Research
-C00087,Customer 087,Greater China,Industrial
-C00088,Customer 088,EMEA,Display
-C00089,Customer 089,Asia-Pacific,Solar
-C00090,Customer 090,EMEA,Semiconductor
-C00091,Customer 091,Asia-Pacific,Research
-C00092,Customer 092,EMEA,Semiconductor
-C00093,Customer 093,EMEA,Solar
-C00094,Customer 094,EMEA,Solar
-C00095,Customer 095,Americas,Solar
-C00096,Customer 096,Asia-Pacific,Solar
-C00097,Customer 097,Asia-Pacific,Research
-C00098,Customer 098,Greater China,Research
-C00099,Customer 099,Asia-Pacific,Solar
-C00100,Customer 100,EMEA,Solar
-C00101,Customer 101,EMEA,Industrial
-C00102,Customer 102,Greater China,Semiconductor
-C00103,Customer 103,Greater China,Semiconductor
-C00104,Customer 104,Asia-Pacific,Semiconductor
-C00105,Customer 105,Americas,Research
-C00106,Customer 106,Asia-Pacific,Solar
-C00107,Customer 107,Greater China,Research
-C00108,Customer 108,EMEA,Research
-C00109,Customer 109,Asia-Pacific,Display
-C00110,Customer 110,Asia-Pacific,Industrial
-C00111,Customer 111,Greater China,Research
-C00112,Customer 112,Asia-Pacific,Display
-C00113,Customer 113,Greater China,Display
-C00114,Customer 114,Asia-Pacific,Display
-C00115,Customer 115,Americas,Semiconductor
-C00116,Customer 116,Greater China,Semiconductor
-C00117,Customer 117,EMEA,Industrial
-C00118,Customer 118,Asia-Pacific,Solar
-C00119,Customer 119,Asia-Pacific,Display
-C00120,Customer 120,EMEA,Research
+customer_sk,customer_id,customer_name,region,segment,valid_from,valid_to,is_current
+1,C00001,Customer 001,Americas,Semiconductor,1900-01-01,9999-12-31,True
+2,C00002,Customer 002,EMEA,Industrial,1900-01-01,9999-12-31,True
+3,C00003,Customer 003,Americas,Display,1900-01-01,9999-12-31,True
+4,C00004,Customer 004,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+5,C00005,Customer 005,Greater China,Industrial,1900-01-01,2026-11-14,False
+6,C00006,Customer 006,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+7,C00007,Customer 007,EMEA,Display,1900-01-01,9999-12-31,True
+8,C00008,Customer 008,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+9,C00009,Customer 009,Americas,Semiconductor,1900-01-01,9999-12-31,True
+10,C00010,Customer 010,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+11,C00011,Customer 011,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+12,C00012,Customer 012,EMEA,Semiconductor,1900-01-01,9999-12-31,True
+13,C00013,Customer 013,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+14,C00014,Customer 014,Americas,Solar,1900-01-01,9999-12-31,True
+15,C00015,Customer 015,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+16,C00016,Customer 016,Greater China,Display,1900-01-01,9999-12-31,True
+17,C00017,Customer 017,Greater China,Display,1900-01-01,9999-12-31,True
+18,C00018,Customer 018,Greater China,Solar,1900-01-01,9999-12-31,True
+19,C00019,Customer 019,Asia-Pacific,Industrial,1900-01-01,9999-12-31,True
+20,C00020,Customer 020,Greater China,Industrial,1900-01-01,9999-12-31,True
+21,C00021,Customer 021,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+22,C00022,Customer 022,Americas,Semiconductor,1900-01-01,9999-12-31,True
+23,C00023,Customer 023,Greater China,Display,1900-01-01,9999-12-31,True
+24,C00024,Customer 024,EMEA,Display,1900-01-01,9999-12-31,True
+25,C00025,Customer 025,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+26,C00026,Customer 026,Greater China,Solar,1900-01-01,9999-12-31,True
+27,C00027,Customer 027,Americas,Semiconductor,1900-01-01,2026-11-14,False
+28,C00028,Customer 028,EMEA,Display,1900-01-01,9999-12-31,True
+29,C00029,Customer 029,Greater China,Solar,1900-01-01,9999-12-31,True
+30,C00030,Customer 030,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+31,C00031,Customer 031,EMEA,Industrial,1900-01-01,9999-12-31,True
+32,C00032,Customer 032,EMEA,Semiconductor,1900-01-01,9999-12-31,True
+33,C00033,Customer 033,Americas,Industrial,1900-01-01,9999-12-31,True
+34,C00034,Customer 034,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+35,C00035,Customer 035,Greater China,Industrial,1900-01-01,9999-12-31,True
+36,C00036,Customer 036,Greater China,Industrial,1900-01-01,9999-12-31,True
+37,C00037,Customer 037,EMEA,Industrial,1900-01-01,9999-12-31,True
+38,C00038,Customer 038,Americas,Industrial,1900-01-01,9999-12-31,True
+39,C00039,Customer 039,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+40,C00040,Customer 040,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+41,C00041,Customer 041,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+42,C00042,Customer 042,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+43,C00043,Customer 043,Greater China,Solar,1900-01-01,9999-12-31,True
+44,C00044,Customer 044,Americas,Solar,1900-01-01,9999-12-31,True
+45,C00045,Customer 045,Greater China,Industrial,1900-01-01,2026-11-14,False
+46,C00046,Customer 046,Greater China,Solar,1900-01-01,9999-12-31,True
+47,C00047,Customer 047,Greater China,Display,1900-01-01,9999-12-31,True
+48,C00048,Customer 048,Asia-Pacific,Research,1900-01-01,2026-11-14,False
+49,C00049,Customer 049,EMEA,Display,1900-01-01,9999-12-31,True
+50,C00050,Customer 050,EMEA,Semiconductor,1900-01-01,9999-12-31,True
+51,C00051,Customer 051,Americas,Solar,1900-01-01,9999-12-31,True
+52,C00052,Customer 052,EMEA,Solar,1900-01-01,9999-12-31,True
+53,C00053,Customer 053,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+54,C00054,Customer 054,Americas,Display,1900-01-01,9999-12-31,True
+55,C00055,Customer 055,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+56,C00056,Customer 056,Asia-Pacific,Display,1900-01-01,2026-11-14,False
+57,C00057,Customer 057,Americas,Display,1900-01-01,9999-12-31,True
+58,C00058,Customer 058,EMEA,Research,1900-01-01,9999-12-31,True
+59,C00059,Customer 059,EMEA,Display,1900-01-01,9999-12-31,True
+60,C00060,Customer 060,Greater China,Industrial,1900-01-01,9999-12-31,True
+61,C00061,Customer 061,Asia-Pacific,Industrial,1900-01-01,9999-12-31,True
+62,C00062,Customer 062,Greater China,Solar,1900-01-01,9999-12-31,True
+63,C00063,Customer 063,Greater China,Display,1900-01-01,9999-12-31,True
+64,C00064,Customer 064,Americas,Solar,1900-01-01,9999-12-31,True
+65,C00065,Customer 065,Greater China,Industrial,1900-01-01,2026-11-14,False
+66,C00066,Customer 066,Americas,Research,1900-01-01,9999-12-31,True
+67,C00067,Customer 067,EMEA,Industrial,1900-01-01,9999-12-31,True
+68,C00068,Customer 068,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+69,C00069,Customer 069,Greater China,Research,1900-01-01,9999-12-31,True
+70,C00070,Customer 070,EMEA,Display,1900-01-01,9999-12-31,True
+71,C00071,Customer 071,EMEA,Research,1900-01-01,9999-12-31,True
+72,C00072,Customer 072,EMEA,Display,1900-01-01,9999-12-31,True
+73,C00073,Customer 073,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+74,C00074,Customer 074,Asia-Pacific,Industrial,1900-01-01,9999-12-31,True
+75,C00075,Customer 075,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+76,C00076,Customer 076,Greater China,Research,1900-01-01,9999-12-31,True
+77,C00077,Customer 077,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+78,C00078,Customer 078,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+79,C00079,Customer 079,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+80,C00080,Customer 080,Asia-Pacific,Industrial,1900-01-01,9999-12-31,True
+81,C00081,Customer 081,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+82,C00082,Customer 082,Greater China,Industrial,1900-01-01,9999-12-31,True
+83,C00083,Customer 083,EMEA,Industrial,1900-01-01,9999-12-31,True
+84,C00084,Customer 084,Americas,Solar,1900-01-01,9999-12-31,True
+85,C00085,Customer 085,Americas,Research,1900-01-01,9999-12-31,True
+86,C00086,Customer 086,Greater China,Research,1900-01-01,9999-12-31,True
+87,C00087,Customer 087,Greater China,Industrial,1900-01-01,9999-12-31,True
+88,C00088,Customer 088,EMEA,Display,1900-01-01,9999-12-31,True
+89,C00089,Customer 089,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+90,C00090,Customer 090,EMEA,Semiconductor,1900-01-01,9999-12-31,True
+91,C00091,Customer 091,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+92,C00092,Customer 092,EMEA,Semiconductor,1900-01-01,9999-12-31,True
+93,C00093,Customer 093,EMEA,Solar,1900-01-01,9999-12-31,True
+94,C00094,Customer 094,EMEA,Solar,1900-01-01,9999-12-31,True
+95,C00095,Customer 095,Americas,Solar,1900-01-01,9999-12-31,True
+96,C00096,Customer 096,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+97,C00097,Customer 097,Asia-Pacific,Research,1900-01-01,9999-12-31,True
+98,C00098,Customer 098,Greater China,Research,1900-01-01,9999-12-31,True
+99,C00099,Customer 099,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+100,C00100,Customer 100,EMEA,Solar,1900-01-01,9999-12-31,True
+101,C00101,Customer 101,EMEA,Industrial,1900-01-01,9999-12-31,True
+102,C00102,Customer 102,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+103,C00103,Customer 103,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+104,C00104,Customer 104,Asia-Pacific,Semiconductor,1900-01-01,9999-12-31,True
+105,C00105,Customer 105,Americas,Research,1900-01-01,9999-12-31,True
+106,C00106,Customer 106,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+107,C00107,Customer 107,Greater China,Research,1900-01-01,9999-12-31,True
+108,C00108,Customer 108,EMEA,Research,1900-01-01,9999-12-31,True
+109,C00109,Customer 109,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+110,C00110,Customer 110,Asia-Pacific,Industrial,1900-01-01,9999-12-31,True
+111,C00111,Customer 111,Greater China,Research,1900-01-01,9999-12-31,True
+112,C00112,Customer 112,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+113,C00113,Customer 113,Greater China,Display,1900-01-01,9999-12-31,True
+114,C00114,Customer 114,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+115,C00115,Customer 115,Americas,Semiconductor,1900-01-01,9999-12-31,True
+116,C00116,Customer 116,Greater China,Semiconductor,1900-01-01,9999-12-31,True
+117,C00117,Customer 117,EMEA,Industrial,1900-01-01,9999-12-31,True
+118,C00118,Customer 118,Asia-Pacific,Solar,1900-01-01,9999-12-31,True
+119,C00119,Customer 119,Asia-Pacific,Display,1900-01-01,9999-12-31,True
+120,C00120,Customer 120,EMEA,Research,1900-01-01,9999-12-31,True
+121,C00005,Customer 005,Greater China,Semiconductor,2026-11-15,9999-12-31,True
+122,C00027,Customer 027,Americas,Display,2026-11-15,9999-12-31,True
+123,C00045,Customer 045,Greater China,Semiconductor,2026-11-15,9999-12-31,True
+124,C00048,Customer 048,Asia-Pacific,Industrial,2026-11-15,9999-12-31,True
+125,C00056,Customer 056,Asia-Pacific,Solar,2026-11-15,9999-12-31,True
+126,C00065,Customer 065,Greater China,Semiconductor,2026-11-15,9999-12-31,True
+127,C00121,Customer 121,Greater China,Display,1900-01-01,9999-12-31,True
+128,C00122,Customer 122,EMEA,Display,1900-01-01,9999-12-31,True
+129,C00123,Customer 123,EMEA,Solar,1900-01-01,9999-12-31,True
+-1,UNKNOWN,Unknown customer,Unknown,Unknown,1900-01-01,9999-12-31,True

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.0.0/schema.json",
+  "pageOrder": [
+    "p01_overview",
+    "p02_delivery",
+    "p03_production",
+    "p04_inventory",
+    "p05_purchasing",
+    "p06_data_quality",
+    "p07_pipeline_runs",
+    "p08_customer_orders",
+    "p09_work_center_orders"
+  ],
+  "activePageName": "p01_overview"
+}

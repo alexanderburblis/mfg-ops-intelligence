@@ -1,0 +1,237 @@
+/// One row per production order, with planned and actual dates and yields.
+table gold_fact_production_order
+	lineageTag: cbcbdd3c-69bb-5aff-8663-a1719e69b415
+
+	measure 'Good Qty' = SUM ( gold_fact_production_order[good_qty] )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: e9ff6407-9dbc-589f-9654-af9f5a19c492
+
+	measure 'Scrap Qty' = SUM ( gold_fact_production_order[scrap_qty] )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: ac523738-32e4-5fff-9b3f-494867c2387f
+
+	/// Scrap quantity divided by good plus scrap quantity of ended orders.
+	measure 'Scrap Rate %' = DIVIDE ( [Scrap Qty], [Good Qty] + [Scrap Qty] )
+		formatString: 0.00%
+		displayFolder: Production
+		lineageTag: 42cf4f80-45cf-5191-89ac-0c2a77366bed
+
+	/// Scrap at standard cost.
+	measure 'Scrap Cost CHF' = SUM ( gold_fact_production_order[scrap_value_chf] )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: 1b36e664-4b01-52a5-afdb-abe9b7dad337
+
+	measure 'Completed Orders' = CALCULATE ( COUNTROWS ( gold_fact_production_order ), gold_fact_production_order[is_completed] = TRUE () )
+		formatString: #,0
+		displayFolder: Production
+		lineageTag: 9d393f19-99d1-56fc-ace9-c01274973944
+
+	measure 'Plan Attainment %' = DIVIDE ( [Good Qty], CALCULATE ( SUM ( gold_fact_production_order[planned_qty] ), gold_fact_production_order[is_completed] = TRUE () ) )
+		formatString: 0.0%
+		displayFolder: Production
+		lineageTag: 69817c21-83d6-5fd0-91a3-a2976e43ef32
+
+	/// Ended orders finished on or before the planned finish date.
+	measure 'Schedule Adherence %' = DIVIDE ( CALCULATE ( COUNTROWS ( gold_fact_production_order ), gold_fact_production_order[is_on_schedule] = TRUE () ), [Completed Orders] )
+		formatString: 0.0%
+		displayFolder: Production
+		lineageTag: 79b1868b-7473-53f0-a8a2-9be2f54df638
+
+	measure 'Avg Cycle Time (days)' = AVERAGE ( gold_fact_production_order[cycle_days] )
+		formatString: #,0.0
+		displayFolder: Production
+		lineageTag: 9baa73ad-5f48-5973-9b42-81d42a95ac55
+
+	measure 'Avg Start Delay (days)' = AVERAGE ( gold_fact_production_order[start_delay_days] )
+		formatString: #,0.0
+		displayFolder: Production
+		lineageTag: 3e6a25c5-6dc8-5af1-837b-5a371fdf890b
+
+	column material_id
+		dataType: string
+		isHidden
+		lineageTag: 00829a2f-ffcd-5971-8605-f52ddc76e024
+		summarizeBy: none
+		sourceColumn: material_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column prod_order_id
+		dataType: string
+		lineageTag: c8684808-c5cb-59e8-92f9-84158e14032e
+		summarizeBy: none
+		sourceColumn: prod_order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_id
+		dataType: string
+		isHidden
+		lineageTag: 8117ece6-ed32-5964-9adc-ca5a11393a79
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column work_center_id
+		dataType: string
+		isHidden
+		lineageTag: f3681757-64cd-5d4e-b007-bb57fd35515f
+		summarizeBy: none
+		sourceColumn: work_center_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 5d85ceff-1916-53dc-885e-ddf56699daf5
+		summarizeBy: none
+		sourceColumn: planned_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_finish
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 8b5bfffb-1517-57b0-b13a-deaca8209d85
+		summarizeBy: none
+		sourceColumn: planned_finish
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_start
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 9655371d-ffa3-593e-bfbd-adaeae8e2a53
+		summarizeBy: none
+		sourceColumn: actual_start
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_finish
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 26bd4998-7ca0-58e6-a349-58ebedcb5e79
+		summarizeBy: none
+		sourceColumn: actual_finish
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_qty
+		dataType: int64
+		lineageTag: 46a393c6-7d70-54e9-af9e-e8f069a10af1
+		summarizeBy: sum
+		sourceColumn: planned_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column good_qty
+		dataType: int64
+		lineageTag: cfef923f-9c6b-5ea6-be7b-97e2aa9b669d
+		summarizeBy: sum
+		sourceColumn: good_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column scrap_qty
+		dataType: int64
+		lineageTag: dec1371c-de17-59e2-b005-8a3fc4b2a599
+		summarizeBy: sum
+		sourceColumn: scrap_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: ea2fd3b1-0fbd-57a0-b144-4b5ee84353f8
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_completed
+		dataType: boolean
+		lineageTag: f3112b36-ebe5-501e-ba2c-10cf7ef8d506
+		summarizeBy: none
+		sourceColumn: is_completed
+
+		annotation SummarizationSetBy = Automatic
+
+	column output_qty
+		dataType: int64
+		lineageTag: dc174c08-d63e-518b-bf8f-5fca9f538f0a
+		summarizeBy: sum
+		sourceColumn: output_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column cycle_days
+		dataType: int64
+		lineageTag: d99d52ea-81bf-5578-82b2-6ec2b71c50ec
+		summarizeBy: sum
+		sourceColumn: cycle_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_delay_days
+		dataType: int64
+		lineageTag: 22ceeb71-a73b-5284-8fac-560adce09144
+		summarizeBy: sum
+		sourceColumn: start_delay_days
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_on_schedule
+		dataType: boolean
+		lineageTag: e0d27003-bf20-5cea-8995-feb27d78e2e7
+		summarizeBy: none
+		sourceColumn: is_on_schedule
+
+		annotation SummarizationSetBy = Automatic
+
+	column good_value_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 41c8852a-dc2a-523d-816f-90deed0bfcde
+		summarizeBy: sum
+		sourceColumn: good_value_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column scrap_value_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 1900f3b9-7ff5-5dc7-9535-db244776ac39
+		summarizeBy: sum
+		sourceColumn: scrap_value_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column planned_finish_key
+		dataType: int64
+		isHidden
+		lineageTag: 86da1340-5680-585c-84f1-1778ba791d06
+		summarizeBy: none
+		sourceColumn: planned_finish_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column actual_finish_key
+		dataType: int64
+		isHidden
+		lineageTag: 9388d91e-0923-5d2f-9785-2b005088f1da
+		summarizeBy: none
+		sourceColumn: actual_finish_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_fact_production_order = entity
+		mode: directLake
+		source
+			entityName: gold_fact_production_order
+			schemaName: dbo
+			expressionSource: DatabaseQuery

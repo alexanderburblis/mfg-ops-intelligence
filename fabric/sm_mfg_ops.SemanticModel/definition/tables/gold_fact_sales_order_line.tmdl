@@ -1,0 +1,268 @@
+/// One row per sales order line, with delivery outcome (on time, in full).
+table gold_fact_sales_order_line
+	lineageTag: a81caed3-60f5-5f1f-9a4b-aaa0cd48dc9f
+
+	/// Order value of valid order lines.
+	measure 'Revenue CHF' = SUM ( gold_fact_sales_order_line[order_value_chf] )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: 46f25a30-8f97-5484-a34a-0af12a2753c1
+
+	/// Same period last year (order date).
+	measure 'Revenue PY CHF' = CALCULATE ( [Revenue CHF], SAMEPERIODLASTYEAR ( gold_dim_date[date] ) )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: ba70b6c1-56a7-5a8e-bfc3-c4f89f136af0
+
+	measure 'Revenue YoY %' = DIVIDE ( [Revenue CHF] - [Revenue PY CHF], [Revenue PY CHF] )
+		formatString: 0.0%
+		displayFolder: Sales
+		lineageTag: 9b94470b-1424-56b0-89f2-d5bb7af6bfeb
+
+	measure 'Order Lines' = COUNTROWS ( gold_fact_sales_order_line )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: a4fcb236-4798-5e42-94ec-511c7bac6f7c
+
+	measure 'Customers with Orders' = DISTINCTCOUNT ( gold_fact_sales_order_line[customer_id] )
+		formatString: #,0
+		displayFolder: Sales
+		lineageTag: a4a7d0b1-3d02-5192-8b1c-d1f1d0b5231f
+
+	measure 'Shipped Lines' = CALCULATE ( COUNTROWS ( gold_fact_sales_order_line ), gold_fact_sales_order_line[is_shipped] = TRUE () )
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: 8e50c78d-a138-5a50-9d7d-7969a0072783
+
+	/// Shipped lines delivered on or before the requested date and in full, divided by shipped lines.
+	measure 'OTIF %' = DIVIDE ( CALCULATE ( COUNTROWS ( gold_fact_sales_order_line ), gold_fact_sales_order_line[is_otif] = TRUE () ), [Shipped Lines] )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: a49971c4-e1a9-5f20-bfda-059c41bbe62d
+
+	/// Service-level target (assumption for the demo).
+	measure 'OTIF Target %' = 0.9
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 4a903592-9826-5307-91ec-2f7b5e9efe09
+
+	measure 'OTIF Gap pts' = [OTIF %] - [OTIF Target %]
+		formatString: +0.0%;-0.0%;0.0%
+		displayFolder: Delivery
+		lineageTag: e79b1ddb-8965-5e51-a927-28d12327acdf
+
+	measure 'On-Time %' = DIVIDE ( CALCULATE ( COUNTROWS ( gold_fact_sales_order_line ), gold_fact_sales_order_line[is_on_time] = TRUE () ), [Shipped Lines] )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: ed88e9e5-5f01-54a1-975c-68dfa7611c89
+
+	measure 'In-Full %' = DIVIDE ( CALCULATE ( COUNTROWS ( gold_fact_sales_order_line ), gold_fact_sales_order_line[is_in_full] = TRUE (), gold_fact_sales_order_line[is_shipped] = TRUE () ), [Shipped Lines] )
+		formatString: 0.0%
+		displayFolder: Delivery
+		lineageTag: 8e176192-b960-53f1-982c-469d168647fd
+
+	measure 'Avg Days Late (late lines)' = CALCULATE ( AVERAGE ( gold_fact_sales_order_line[days_late] ), gold_fact_sales_order_line[days_late] > 0 )
+		formatString: #,0.0
+		displayFolder: Delivery
+		lineageTag: dad97ca3-953d-562f-97a2-b79ddd8af185
+
+	measure 'Open Order Backlog CHF' = CALCULATE ( [Revenue CHF], gold_fact_sales_order_line[is_shipped] = FALSE () )
+		formatString: #,0
+		displayFolder: Delivery
+		lineageTag: 73d9042a-27ff-5d5f-aea8-fb2e5207d947
+
+	column so_id
+		dataType: string
+		lineageTag: 1ee4fb57-3100-5958-a23c-4b4c72242e40
+		summarizeBy: none
+		sourceColumn: so_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column so_line
+		dataType: int64
+		lineageTag: 86f43b6f-a5f8-54db-a604-063e3dfe8c21
+		summarizeBy: none
+		sourceColumn: so_line
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_id
+		dataType: string
+		isHidden
+		lineageTag: 09e55803-7a53-57a7-b1da-18f88f302262
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		isHidden
+		lineageTag: 481ac174-8d7b-50db-bdbe-2d6e8a2f4d27
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column material_id
+		dataType: string
+		isHidden
+		lineageTag: 11f3137b-eab0-5959-a513-f0ca6f62894d
+		summarizeBy: none
+		sourceColumn: material_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 909d693b-eead-555d-9d47-fba0ff4e77a6
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column requested_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: a8df27c5-c469-546e-870c-a49e4f5b0119
+		summarizeBy: none
+		sourceColumn: requested_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_qty
+		dataType: int64
+		lineageTag: dc3595f1-e2cb-5a1b-930b-69011a8d4302
+		summarizeBy: sum
+		sourceColumn: order_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column net_price_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: b8dcec4e-cb67-52c7-a8c0-0b96b79b2e88
+		summarizeBy: sum
+		sourceColumn: net_price_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_ship_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 2513a53d-b060-5ba1-8a91-f03dde3f5697
+		summarizeBy: none
+		sourceColumn: first_ship_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_ship_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 2f47d237-51b0-5982-875a-b81615080931
+		summarizeBy: none
+		sourceColumn: last_ship_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column shipped_qty
+		dataType: int64
+		lineageTag: eaf372f4-6098-5672-aa59-a9af72f34d85
+		summarizeBy: sum
+		sourceColumn: shipped_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_sk
+		dataType: int64
+		isHidden
+		lineageTag: 6ebb8e00-1b51-5001-a3dd-597093f3eb19
+		summarizeBy: none
+		sourceColumn: customer_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_value_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: c4e7f55e-826b-500f-9872-c10dbe788824
+		summarizeBy: sum
+		sourceColumn: order_value_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_shipped
+		dataType: boolean
+		lineageTag: ad3d9373-f7de-55e3-b1f9-a786fe293fe3
+		summarizeBy: none
+		sourceColumn: is_shipped
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_on_time
+		dataType: boolean
+		lineageTag: 2e49d94e-c987-5580-b6d5-eb88a8231190
+		summarizeBy: none
+		sourceColumn: is_on_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_in_full
+		dataType: boolean
+		lineageTag: 1724a8ad-ded8-5299-bcc5-e52c16ba262e
+		summarizeBy: none
+		sourceColumn: is_in_full
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_otif
+		dataType: boolean
+		lineageTag: bae3bd5e-384f-5ccd-ab89-57238ee33b10
+		summarizeBy: none
+		sourceColumn: is_otif
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_late
+		dataType: int64
+		lineageTag: 4e1e418c-9cd1-5266-899a-644c65282139
+		summarizeBy: sum
+		sourceColumn: days_late
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 63eb26b9-22c5-5a46-84d0-03b2687b96ef
+		summarizeBy: none
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column requested_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 1600d248-7ac3-517a-9cd2-25bb5c8d45aa
+		summarizeBy: none
+		sourceColumn: requested_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column ship_date_key
+		dataType: int64
+		isHidden
+		lineageTag: 1a7b34ef-6114-5b51-8e85-cdee60641aa9
+		summarizeBy: none
+		sourceColumn: ship_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_fact_sales_order_line = entity
+		mode: directLake
+		source
+			entityName: gold_fact_sales_order_line
+			schemaName: dbo
+			expressionSource: DatabaseQuery

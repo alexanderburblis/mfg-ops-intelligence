@@ -1,0 +1,33 @@
+table gold_dim_supplier
+	lineageTag: c130288a-9650-52c2-b74c-d2571c7ab92e
+
+	column supplier_id
+		dataType: string
+		lineageTag: 563ed240-a76b-51e0-866a-7c593a836655
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_name
+		dataType: string
+		lineageTag: 3c739ccd-aab6-5970-b774-62ccbaa4ca50
+		summarizeBy: none
+		sourceColumn: supplier_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 8dad4782-96bf-53bb-928a-d0d8af78be64
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_supplier = entity
+		mode: directLake
+		source
+			entityName: gold_dim_supplier
+			schemaName: dbo
+			expressionSource: DatabaseQuery

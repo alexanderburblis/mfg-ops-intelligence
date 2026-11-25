@@ -14,11 +14,11 @@ Generated from `src/mfgops/quality.py` by `tools/gen_docs.py`. Do not edit by ha
 | PR-02 | production_orders | consistency | error | Actual finish is not before actual start | Production planning | Correct the confirmation dates |
 | PR-03 | production_orders | validity | error | Good plus scrap quantity is plausible (max 150% of plan) | Production | Correct the yield or scrap confirmation |
 | PR-04 | production_orders | integrity | warning | Work centre belongs to the same plant | Production planning | Check the routing |
-| PR-05 | production_orders | validity | error | Status is a known value (REL, TECO) | ERP / IT | Map the new status in the extract |
+| PR-05 | production_orders | validity | error | Status is a known D365 production status | ERP / IT | Map the new status in the extract |
 | IN-01 | inventory_snapshots | validity | error | Stock on hand is not negative | Warehouse | Post the missing goods receipt or correct the stock |
 | DL-01 | deliveries | integrity | error | Delivery refers to an existing sales order line | Logistics | Link the delivery to its order in the ERP |
 | PU-01 | purchase_orders | consistency | warning | Goods receipt is not before the order date | Procurement | Check the goods receipt posting date |
-| MA-01 | materials | validity | error | Material type is FERT, HALB or ROH | Master data | Correct the material type |
+| MA-01 | materials | validity | error | Item category is FG, SFG or RM | Master data | Correct the material type |
 | MA-02 | materials | consistency | warning | Base unit of measure is PC (one unit across the model) | Master data | Add a unit conversion or correct the unit |
 | PL-01 | plants | validity | warning | Plant currency is a supported currency | Finance | Add the currency to FX translation |
 | TY-MAT | materials | type | error | Every typed column converts to its data type | ERP / IT | Fix the field format in the extract |

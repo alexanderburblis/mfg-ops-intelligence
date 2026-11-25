@@ -1,0 +1,106 @@
+/// Weekly stock on hand per plant and item (snapshot fact, do not sum across dates).
+table gold_fact_inventory_snapshot
+	lineageTag: 13e05d11-b0b5-5276-b5fe-566066aa9980
+
+	/// Stock at standard cost on the last snapshot date in the filter context.
+	measure 'Stock Value CHF' = VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] ) RETURN CALCULATE ( SUM ( gold_fact_inventory_snapshot[stock_value_chf] ), gold_fact_inventory_snapshot[snapshot_date] = SnapDate )
+		formatString: #,0
+		displayFolder: Inventory
+		lineageTag: a51c3303-a626-5e2a-8607-7faddad9a519
+
+	measure 'Items Below Safety Stock' = VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] ) RETURN CALCULATE ( COUNTROWS ( gold_fact_inventory_snapshot ), gold_fact_inventory_snapshot[snapshot_date] = SnapDate, gold_fact_inventory_snapshot[is_below_safety_stock] = TRUE () )
+		formatString: #,0
+		displayFolder: Inventory
+		lineageTag: fd7ba607-d936-5b4f-b76c-1a55619bd2e9
+
+	/// On-hand quantity divided by average daily independent and dependent demand.
+	measure 'Median Days of Coverage' = VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] ) RETURN CALCULATE ( MEDIAN ( gold_fact_inventory_snapshot[days_of_coverage] ), gold_fact_inventory_snapshot[snapshot_date] = SnapDate )
+		formatString: #,0.0
+		displayFolder: Inventory
+		lineageTag: 3ac1bc6f-3368-54eb-81d0-f0217e4d610d
+
+	column plant_id
+		dataType: string
+		isHidden
+		lineageTag: 1d6bac82-664c-523b-b5b5-88ce93706a23
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column material_id
+		dataType: string
+		isHidden
+		lineageTag: 35df42a0-f61b-5913-9406-040525f9a991
+		summarizeBy: none
+		sourceColumn: material_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column snapshot_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 0c5c7051-aade-55d1-90b7-c0ca72324291
+		summarizeBy: none
+		sourceColumn: snapshot_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column on_hand_qty
+		dataType: int64
+		lineageTag: f3961602-0abb-50f2-888c-ebae8996c5a2
+		summarizeBy: sum
+		sourceColumn: on_hand_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column avg_daily_demand
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 757a9dd2-91f9-59d1-89c7-52565b697fa8
+		summarizeBy: sum
+		sourceColumn: avg_daily_demand
+
+		annotation SummarizationSetBy = Automatic
+
+	column stock_value_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: 27380ff2-9c6e-56fc-86dd-f8585bc7e9ee
+		summarizeBy: sum
+		sourceColumn: stock_value_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_below_safety_stock
+		dataType: boolean
+		lineageTag: a3cff20f-f4ce-51c3-9cb4-c21fb134fb87
+		summarizeBy: none
+		sourceColumn: is_below_safety_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_of_coverage
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 703d3c4b-81f8-5ec8-aff6-568614342bbd
+		summarizeBy: sum
+		sourceColumn: days_of_coverage
+
+		annotation SummarizationSetBy = Automatic
+
+	column snapshot_date_key
+		dataType: int64
+		isHidden
+		lineageTag: da62c7c8-c654-5d9c-bf1d-8899f7e52a66
+		summarizeBy: none
+		sourceColumn: snapshot_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_fact_inventory_snapshot = entity
+		mode: directLake
+		source
+			entityName: gold_fact_inventory_snapshot
+			schemaName: dbo
+			expressionSource: DatabaseQuery
