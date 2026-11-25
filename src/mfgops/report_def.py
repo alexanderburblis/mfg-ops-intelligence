@@ -131,14 +131,22 @@ class Page:
 
     # convenience wrappers
     def card(self, x, y, w, h, field, title):
+        label = {"color": color(NAVY), "fontSize": lit(22)}
+        if "CHF" in field.get("Measure", {}).get("Property", ""):
+            label["labelPrecision"] = lit(2)  # 1.82bn, 61.92M
+        else:
+            label["labelDisplayUnits"] = lit(1)  # counts and rates in full, no K/M
         objs = {
-            "labels": [{"properties": {"color": color(NAVY), "fontSize": lit(22)}}],
+            "labels": [{"properties": label}],
             "categoryLabels": [{"properties": {"show": lit(False)}}],
         }
         return self.add("card", x, y, w, h, {"Values": [proj(field)]}, title=title, objects=objs)
 
     def slicer(self, x, y, w, h, field, title):
-        objs = {"data": [{"properties": {"mode": lit("Dropdown")}}]}
+        objs = {
+            "data": [{"properties": {"mode": lit("Dropdown")}}],
+            "header": [{"properties": {"show": lit(False)}}],  # the container title names the slicer
+        }
         return self.add("slicer", x, y, w, h, {"Values": [proj(field)]}, title=title, objects=objs)
 
     def bar(self, x, y, w, h, category, values, title, vtype="clusteredBarChart", sort=None, colors=None):
@@ -290,8 +298,8 @@ def pages() -> list[Page]:
             meas(S, "OTIF %"),
             meas(S, "Avg Days Late (late lines)"),
         ],
-        "Customers by OTIF (right-click a row → Drill through → Customer orders)",
-        sort=(meas(S, "OTIF %"), "Ascending"),
+        "Customers by order volume with OTIF and lateness (right-click a row → Drill through → Customer orders)",
+        sort=(meas(S, "Order Lines"), "Descending"),
     )
     out.append(pg)
 

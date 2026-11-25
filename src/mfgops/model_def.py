@@ -222,7 +222,7 @@ MEASURES = [
         "Purchasing",
         "",
     ),
-    (Q, "Latest DQ Run", f"MAX ( {Q}[run_ts] )", "yyyy-mm-dd hh:nn", "Data quality", ""),
+    (Q, "Latest DQ Run", f"MAX ( {Q}[run_ts] )", "dd mmm hh:nn", "Data quality", ""),
     (
         Q,
         "Rows Checked (latest run)",
@@ -287,7 +287,7 @@ MEASURES = [
         R,
         "Last Successful Run",
         f'CALCULATE ( MAX ( {R}[finished_at] ), {R}[status] = "success" )',
-        "yyyy-mm-dd hh:nn",
+        "dd mmm hh:nn",
         "Monitoring",
         "",
     ),
