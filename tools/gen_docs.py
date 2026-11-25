@@ -59,8 +59,14 @@ grain = {
 }
 for t in sorted(p.name for p in lake.iterdir()):
     df = pd.read_parquet(lake / t)
-    dd += [f"## {t}", "", f"Grain: {grain.get(t, '-')}. Rows: {len(df):,}.", "",
-           "| Column | Type | Nulls % | Distinct | Example |", "|---|---|---|---|---|"]
+    dd += [
+        f"## {t}",
+        "",
+        f"Grain: {grain.get(t, '-')}. Rows: {len(df):,}.",
+        "",
+        "| Column | Type | Nulls % | Distinct | Example |",
+        "|---|---|---|---|---|",
+    ]
     for c in df.columns:
         s = df[c]
         ex = s.dropna().iloc[0] if s.notna().any() else ""

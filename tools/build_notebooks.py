@@ -8,8 +8,10 @@ Run:  python tools/build_notebooks.py
 import json
 from pathlib import Path
 
-SETUP = """# Requires: this notebook attached to the lakehouse 'lh_mfg_ops' (default lakehouse)
-# and the Fabric environment 'env_mfgops', which has the mfgops wheel from CI installed.
+INSTALL = "%pip install https://github.com/alexanderburblis/mfg-ops-intelligence/archive/refs/heads/main.zip --quiet"
+
+SETUP = """# Requires: this notebook attached to the lakehouse 'lh_mfg_ops' (default lakehouse).
+# The mfgops package is installed by the %pip cell above (pin a tag or use an Environment in production).
 from mfgops.lakehouse import Lakehouse
 lh = Lakehouse.detect(spark)
 print("Running in Fabric:", lh.fabric)"""
@@ -22,7 +24,22 @@ NOTEBOOKS = {
         ),
         (
             "code",
+            INSTALL,
+        ),
+        (
+            "code",
             "from mfgops.generate import generate\nplanted = generate('/lakehouse/default/Files/raw', seed=42)\nplanted",
+        ),
+    ],
+    "05_generate_increment": [
+        (
+            "markdown",
+            "# 05 Generate the change extract\nWrites the 15 Nov 2026 delivery (new and changed rows only, D365 entity names, `ModifiedDateTime`) to `Files/increments/2026-11-15`. Run `04_orchestrated_run` with `load_mode = 'incremental'` afterwards.",
+        ),
+        ("code", INSTALL),
+        (
+            "code",
+            "from mfgops.generate import generate_increment\ngenerate_increment('/lakehouse/default/Files/increments/2026-11-15', seed=42)",
         ),
     ],
     "01_bronze_ingest": [
@@ -30,6 +47,7 @@ NOTEBOOKS = {
             "markdown",
             "# 01 Bronze: land raw extracts as Delta tables\nNo cleaning here. Every column stays text, plus load timestamp and source file, so the raw state can always be replayed.",
         ),
+        ("code", INSTALL),
         ("code", SETUP),
         ("code", "from mfgops.pipeline import run_bronze\nrun_bronze(lh)"),
     ],
@@ -38,6 +56,7 @@ NOTEBOOKS = {
             "markdown",
             "# 02 Silver: type, check, clean\nApplies the data-quality rules in `mfgops.quality`. Rows failing an *error* rule go to `quarantine_<table>`, results of every rule are appended to `gold_dq_results`.",
         ),
+        ("code", INSTALL),
         ("code", SETUP),
         (
             "code",
@@ -50,21 +69,50 @@ NOTEBOOKS = {
             "markdown",
             "# 03 Gold: star schema for the semantic model\nBuilds `gold_dim_*` and `gold_fact_*` tables. The Power BI semantic model reads them in Direct Lake mode.",
         ),
+        ("code", INSTALL),
         ("code", SETUP),
         ("code", "from mfgops.pipeline import run_gold\nrun_gold(lh)"),
     ],
     "04_orchestrated_run": [
-        ("markdown", "# 04 Orchestrated run (scheduled by the Fabric Data Pipeline)\nRuns all stages in order with logging, retries, the quality gate and reconciliation. Raises an error when the run fails, so the pipeline activity turns red and its failure path (alert email) fires."),
+        (
+            "markdown",
+            "# 04 Orchestrated run (scheduled by the Fabric Data Pipeline)\nRuns all stages in order with logging, retries, the quality gate and reconciliation. Raises an error when the run fails, so the pipeline activity turns red and its failure path (alert email) fires.",
+        ),
+        (
+            "parameters",
+            "# Parameters (the Data Pipeline overrides these)\nload_mode = 'full'  # or 'incremental'\nraw_path = 'Files/raw'  # e.g. 'Files/increments/2026-11-15' for a change extract",
+        ),
+        ("code", INSTALL),
         ("code", SETUP),
-        ("code", "from mfgops.orchestrate import run_pipeline\nres = run_pipeline(lh, max_error_rate=0.02)\nprint(res.run_id, res.status, res.failed_stage, res.message)"),
-        ("code", "display(lh.read('meta', 'pipeline_runs').filter(f\"run_id = '{res.run_id}'\").orderBy('started_at'))"),
-        ("code", "if res.status != 'success':\n    raise RuntimeError(f'Pipeline run {res.run_id} failed at {res.failed_stage}: {res.message}')"),
+        (
+            "code",
+            "from mfgops.orchestrate import run_pipeline\nlh.raw_path = raw_path\nres = run_pipeline(lh, max_error_rate=0.02, mode=load_mode)\nprint(res.run_id, res.mode, res.status, res.failed_stage, res.message)",
+        ),
+        (
+            "code",
+            "display(lh.read('meta', 'pipeline_runs').filter(f\"run_id = '{res.run_id}'\").orderBy('started_at'))",
+        ),
+        (
+            "code",
+            "if res.status != 'success':\n    raise RuntimeError(f'Pipeline run {res.run_id} failed at {res.failed_stage}: {res.message}')",
+        ),
+    ],
+    "06_deploy_model_and_report": [
+        (
+            "markdown",
+            "# 06 Deploy semantic model and report (deployment as code)\nPublishes `sm_mfg_ops` (Direct Lake, TMDL) and `rpt_mfg_ops` (PBIR) from the definitions in `mfgops.model_def` and `mfgops.report_def` through the Fabric REST API, fills in this workspace's SQL endpoint and refreshes the model. Run it in the test workspace, check, then run it in production.",
+        ),
+        ("code", INSTALL),
+        ("code", "from mfgops.deploy import deploy\nids = deploy()\nids"),
     ],
 }
 
 
 def cell(kind, src):
-    c = {"cell_type": kind, "metadata": {}, "source": src.splitlines(keepends=True)}
+    meta = {}
+    if kind == "parameters":  # a code cell tagged as the notebook's parameter cell
+        kind, meta = "code", {"tags": ["parameters"]}
+    c = {"cell_type": kind, "metadata": meta, "source": src.splitlines(keepends=True)}
     if kind == "code":
         c.update(outputs=[], execution_count=None)
     return c
