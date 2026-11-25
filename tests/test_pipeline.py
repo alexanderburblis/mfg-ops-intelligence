@@ -96,3 +96,15 @@ def test_every_fact_key_has_a_dimension_row(built):
     assert orphans == 0
     orphans = facts.join(lh.read("gold", "dim_material"), "material_id", "left_anti").count()
     assert orphans == 0
+
+
+def test_quarantine_lists_failed_rules(built):
+    q = built["lh"].read("quarantine", "sales_orders")
+    assert q.count() > 0
+    assert q.filter("failed_rules = '' OR failed_rules IS NULL").count() == 0
+
+
+def test_new_rules_pass_on_clean_data(built):
+    lh = built["lh"]
+    for rule in ["SO-05", "SO-06", "PR-05", "MA-01", "MA-02", "PL-01", "TY-SAL", "TY-PRO", "TY-INV"]:
+        assert _failed(lh, rule) == 0, rule
