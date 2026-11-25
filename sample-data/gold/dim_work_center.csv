@@ -1,0 +1,13 @@
+work_center_id,plant_id,work_center_name,capacity_hours_per_day
+CH01-WC1,CH01,CNC Machining,16
+CH01-WC2,CH01,Cleanroom Assembly,20
+CH01-WC3,CH01,Leak Testing,12
+CH01-WC4,CH01,Final Inspection,10
+MY01-WC1,MY01,CNC Machining,16
+MY01-WC2,MY01,Cleanroom Assembly,20
+MY01-WC3,MY01,Leak Testing,12
+MY01-WC4,MY01,Final Inspection,10
+RO01-WC1,RO01,CNC Machining,16
+RO01-WC2,RO01,Cleanroom Assembly,20
+RO01-WC3,RO01,Leak Testing,12
+RO01-WC4,RO01,Final Inspection,10

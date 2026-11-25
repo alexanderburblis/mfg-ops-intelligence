@@ -1,0 +1,131 @@
+material_id,description,material_type,product_family,base_uom,standard_cost_chf,safety_stock_qty,lead_time_days
+FG-0001,Gate Valve Series 101,FERT,Gate Valves,PC,11242.26,18,18
+FG-0002,Pendulum Valve Series 102,FERT,Pendulum Valves,PC,12274.89,6,23
+FG-0003,Angle Valve Series 103,FERT,Angle Valves,PC,2948.96,15,29
+FG-0004,Transfer Valve Series 104,FERT,Transfer Valves,PC,11085.90,19,25
+FG-0005,Bellow Series 105,FERT,Bellows,PC,3362.99,21,19
+FG-0006,Gate Valve Series 106,FERT,Gate Valves,PC,6323.74,8,28
+FG-0007,Pendulum Valve Series 107,FERT,Pendulum Valves,PC,9655.15,13,26
+FG-0008,Angle Valve Series 108,FERT,Angle Valves,PC,7209.65,14,14
+FG-0009,Transfer Valve Series 109,FERT,Transfer Valves,PC,8565.93,22,11
+FG-0010,Bellow Series 110,FERT,Bellows,PC,11897.10,10,22
+FG-0011,Gate Valve Series 111,FERT,Gate Valves,PC,11048.67,19,17
+FG-0012,Pendulum Valve Series 112,FERT,Pendulum Valves,PC,13642.52,13,27
+FG-0013,Angle Valve Series 113,FERT,Angle Valves,PC,11296.28,20,13
+FG-0014,Transfer Valve Series 114,FERT,Transfer Valves,PC,7494.00,14,10
+FG-0015,Bellow Series 115,FERT,Bellows,PC,3682.33,19,23
+FG-0016,Gate Valve Series 116,FERT,Gate Valves,PC,10886.10,12,29
+FG-0017,Pendulum Valve Series 117,FERT,Pendulum Valves,PC,5775.07,23,17
+FG-0018,Angle Valve Series 118,FERT,Angle Valves,PC,7528.58,20,13
+FG-0019,Transfer Valve Series 119,FERT,Transfer Valves,PC,3385.04,18,19
+FG-0020,Bellow Series 120,FERT,Bellows,PC,4568.29,16,23
+FG-0021,Gate Valve Series 121,FERT,Gate Valves,PC,7133.25,8,26
+FG-0022,Pendulum Valve Series 122,FERT,Pendulum Valves,PC,10343.23,6,16
+FG-0023,Angle Valve Series 123,FERT,Angle Valves,PC,11953.57,13,26
+FG-0024,Transfer Valve Series 124,FERT,Transfer Valves,PC,6527.24,22,15
+FG-0025,Bellow Series 125,FERT,Bellows,PC,10126.45,17,12
+FG-0026,Gate Valve Series 126,FERT,Gate Valves,PC,4238.88,21,10
+FG-0027,Pendulum Valve Series 127,FERT,Pendulum Valves,PC,11400.48,20,23
+FG-0028,Angle Valve Series 128,FERT,Angle Valves,PC,10403.02,10,25
+FG-0029,Transfer Valve Series 129,FERT,Transfer Valves,PC,7398.77,15,21
+FG-0030,Bellow Series 130,FERT,Bellows,PC,3505.52,9,12
+FG-0031,Gate Valve Series 131,FERT,Gate Valves,PC,9954.52,18,19
+FG-0032,Pendulum Valve Series 132,FERT,Pendulum Valves,PC,8695.88,6,25
+FG-0033,Angle Valve Series 133,FERT,Angle Valves,PC,9543.56,16,21
+FG-0034,Transfer Valve Series 134,FERT,Transfer Valves,PC,8622.33,20,16
+FG-0035,Bellow Series 135,FERT,Bellows,PC,2175.98,11,18
+FG-0036,Gate Valve Series 136,FERT,Gate Valves,PC,4417.93,10,18
+FG-0037,Pendulum Valve Series 137,FERT,Pendulum Valves,PC,12211.52,5,14
+FG-0038,Angle Valve Series 138,FERT,Angle Valves,PC,2511.29,22,15
+FG-0039,Transfer Valve Series 139,FERT,Transfer Valves,PC,5381.84,13,23
+FG-0040,Bellow Series 140,FERT,Bellows,PC,8595.79,15,25
+SF-0001,Sub-assembly 1,HALB,Sub-assemblies,PC,1744.71,30,9
+SF-0002,Sub-assembly 2,HALB,Sub-assemblies,PC,2081.55,26,6
+SF-0003,Sub-assembly 3,HALB,Sub-assemblies,PC,301.10,15,5
+SF-0004,Sub-assembly 4,HALB,Sub-assemblies,PC,1875.31,44,9
+SF-0005,Sub-assembly 5,HALB,Sub-assemblies,PC,612.86,55,10
+SF-0006,Sub-assembly 6,HALB,Sub-assemblies,PC,592.70,34,11
+SF-0007,Sub-assembly 7,HALB,Sub-assemblies,PC,1253.85,18,8
+SF-0008,Sub-assembly 8,HALB,Sub-assemblies,PC,928.40,44,11
+SF-0009,Sub-assembly 9,HALB,Sub-assemblies,PC,1064.08,57,5
+SF-0010,Sub-assembly 10,HALB,Sub-assemblies,PC,515.51,26,14
+SF-0011,Sub-assembly 11,HALB,Sub-assemblies,PC,2294.31,34,11
+SF-0012,Sub-assembly 12,HALB,Sub-assemblies,PC,848.21,48,14
+SF-0013,Sub-assembly 13,HALB,Sub-assemblies,PC,2002.19,23,12
+SF-0014,Sub-assembly 14,HALB,Sub-assemblies,PC,1261.06,46,7
+SF-0015,Sub-assembly 15,HALB,Sub-assemblies,PC,466.88,32,14
+SF-0016,Sub-assembly 16,HALB,Sub-assemblies,PC,1275.50,45,7
+SF-0017,Sub-assembly 17,HALB,Sub-assemblies,PC,938.40,50,10
+SF-0018,Sub-assembly 18,HALB,Sub-assemblies,PC,647.74,33,13
+SF-0019,Sub-assembly 19,HALB,Sub-assemblies,PC,1956.67,34,12
+SF-0020,Sub-assembly 20,HALB,Sub-assemblies,PC,1222.21,25,11
+SF-0021,Sub-assembly 21,HALB,Sub-assemblies,PC,1564.22,14,11
+SF-0022,Sub-assembly 22,HALB,Sub-assemblies,PC,440.00,47,9
+SF-0023,Sub-assembly 23,HALB,Sub-assemblies,PC,343.63,18,9
+SF-0024,Sub-assembly 24,HALB,Sub-assemblies,PC,992.19,43,6
+SF-0025,Sub-assembly 25,HALB,Sub-assemblies,PC,482.66,18,10
+SF-0026,Sub-assembly 26,HALB,Sub-assemblies,PC,633.83,24,14
+SF-0027,Sub-assembly 27,HALB,Sub-assemblies,PC,1557.39,32,8
+SF-0028,Sub-assembly 28,HALB,Sub-assemblies,PC,1579.56,24,5
+SF-0029,Sub-assembly 29,HALB,Sub-assemblies,PC,2406.76,30,9
+SF-0030,Sub-assembly 30,HALB,Sub-assemblies,PC,2011.15,13,5
+RM-0001,Aluminium block 1,ROH,Raw materials,PC,197.23,284,33
+RM-0002,Elastomer seal 2,ROH,Raw materials,PC,375.44,106,37
+RM-0003,Bearing 3,ROH,Raw materials,PC,192.03,332,21
+RM-0004,Actuator 4,ROH,Raw materials,PC,135.97,240,34
+RM-0005,Sensor 5,ROH,Raw materials,PC,178.37,149,8
+RM-0006,Stainless bar 6,ROH,Raw materials,PC,331.39,53,54
+RM-0007,Aluminium block 7,ROH,Raw materials,PC,60.40,155,36
+RM-0008,Elastomer seal 8,ROH,Raw materials,PC,47.89,283,42
+RM-0009,Bearing 9,ROH,Raw materials,PC,116.09,135,41
+RM-0010,Actuator 10,ROH,Raw materials,PC,292.16,378,47
+RM-0011,Sensor 11,ROH,Raw materials,PC,47.56,265,55
+RM-0012,Stainless bar 12,ROH,Raw materials,PC,95.93,132,8
+RM-0013,Aluminium block 13,ROH,Raw materials,PC,224.17,241,26
+RM-0014,Elastomer seal 14,ROH,Raw materials,PC,332.77,211,49
+RM-0015,Bearing 15,ROH,Raw materials,PC,130.27,120,57
+RM-0016,Actuator 16,ROH,Raw materials,PC,119.91,267,34
+RM-0017,Sensor 17,ROH,Raw materials,PC,106.11,396,56
+RM-0018,Stainless bar 18,ROH,Raw materials,PC,70.02,236,9
+RM-0019,Aluminium block 19,ROH,Raw materials,PC,176.86,389,59
+RM-0020,Elastomer seal 20,ROH,Raw materials,PC,357.21,81,46
+RM-0021,Bearing 21,ROH,Raw materials,PC,356.86,128,54
+RM-0022,Actuator 22,ROH,Raw materials,PC,209.95,214,23
+RM-0023,Sensor 23,ROH,Raw materials,PC,309.94,167,42
+RM-0024,Stainless bar 24,ROH,Raw materials,PC,152.59,360,12
+RM-0025,Aluminium block 25,ROH,Raw materials,PC,299.98,182,20
+RM-0026,Elastomer seal 26,ROH,Raw materials,PC,375.04,381,19
+RM-0027,Bearing 27,ROH,Raw materials,PC,53.49,73,51
+RM-0028,Actuator 28,ROH,Raw materials,PC,65.55,311,16
+RM-0029,Sensor 29,ROH,Raw materials,PC,241.76,301,53
+RM-0030,Stainless bar 30,ROH,Raw materials,PC,82.59,148,23
+RM-0031,Aluminium block 31,ROH,Raw materials,PC,312.07,162,58
+RM-0032,Elastomer seal 32,ROH,Raw materials,PC,202.79,201,14
+RM-0033,Bearing 33,ROH,Raw materials,PC,10.50,110,19
+RM-0034,Actuator 34,ROH,Raw materials,PC,57.07,56,42
+RM-0035,Sensor 35,ROH,Raw materials,PC,53.12,153,33
+RM-0036,Stainless bar 36,ROH,Raw materials,PC,279.23,318,37
+RM-0037,Aluminium block 37,ROH,Raw materials,PC,83.91,352,49
+RM-0038,Elastomer seal 38,ROH,Raw materials,PC,287.59,79,46
+RM-0039,Bearing 39,ROH,Raw materials,PC,56.77,201,13
+RM-0040,Actuator 40,ROH,Raw materials,PC,371.39,78,28
+RM-0041,Sensor 41,ROH,Raw materials,PC,123.87,96,32
+RM-0042,Stainless bar 42,ROH,Raw materials,PC,266.83,159,57
+RM-0043,Aluminium block 43,ROH,Raw materials,PC,118.15,386,56
+RM-0044,Elastomer seal 44,ROH,Raw materials,PC,14.82,258,36
+RM-0045,Bearing 45,ROH,Raw materials,PC,255.42,344,12
+RM-0046,Actuator 46,ROH,Raw materials,PC,60.43,312,29
+RM-0047,Sensor 47,ROH,Raw materials,PC,386.66,108,38
+RM-0048,Stainless bar 48,ROH,Raw materials,PC,373.54,308,49
+RM-0049,Aluminium block 49,ROH,Raw materials,PC,189.62,272,48
+RM-0050,Elastomer seal 50,ROH,Raw materials,PC,12.05,282,12
+RM-0051,Bearing 51,ROH,Raw materials,PC,332.62,137,49
+RM-0052,Actuator 52,ROH,Raw materials,PC,96.89,166,35
+RM-0053,Sensor 53,ROH,Raw materials,PC,244.38,376,52
+RM-0054,Stainless bar 54,ROH,Raw materials,PC,243.23,151,28
+RM-0055,Aluminium block 55,ROH,Raw materials,PC,152.80,374,29
+RM-0056,Elastomer seal 56,ROH,Raw materials,PC,262.51,386,52
+RM-0057,Bearing 57,ROH,Raw materials,PC,184.29,235,20
+RM-0058,Actuator 58,ROH,Raw materials,PC,98.48,398,46
+RM-0059,Sensor 59,ROH,Raw materials,PC,327.54,385,12
+RM-0060,Stainless bar 60,ROH,Raw materials,PC,31.29,216,38
