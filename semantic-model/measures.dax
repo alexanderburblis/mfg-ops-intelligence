@@ -66,23 +66,23 @@ Last Snapshot Date =
 CALCULATE ( MAX ( gold_fact_inventory_snapshot[snapshot_date] ), ALLSELECTED ( gold_dim_date ) )
 
 Stock Value CHF =
-VAR LastDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
+VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
 RETURN
-    CALCULATE ( SUM ( gold_fact_inventory_snapshot[stock_value_chf] ), gold_fact_inventory_snapshot[snapshot_date] = LastDate )
+    CALCULATE ( SUM ( gold_fact_inventory_snapshot[stock_value_chf] ), gold_fact_inventory_snapshot[snapshot_date] = SnapDate )
 
 Items Below Safety Stock =
-VAR LastDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
+VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
 RETURN
     CALCULATE (
         COUNTROWS ( gold_fact_inventory_snapshot ),
-        gold_fact_inventory_snapshot[snapshot_date] = LastDate,
+        gold_fact_inventory_snapshot[snapshot_date] = SnapDate,
         gold_fact_inventory_snapshot[is_below_safety_stock] = TRUE ()
     )
 
 Median Days of Coverage =
-VAR LastDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
+VAR SnapDate = MAX ( gold_fact_inventory_snapshot[snapshot_date] )
 RETURN
-    CALCULATE ( MEDIAN ( gold_fact_inventory_snapshot[days_of_coverage] ), gold_fact_inventory_snapshot[snapshot_date] = LastDate )
+    CALCULATE ( MEDIAN ( gold_fact_inventory_snapshot[days_of_coverage] ), gold_fact_inventory_snapshot[snapshot_date] = SnapDate )
 
 // ---------------------------------------------------------------- Purchasing
 Supplier On-Time % =
