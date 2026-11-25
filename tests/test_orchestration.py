@@ -60,3 +60,13 @@ def test_row_count_monitor():
     assert monitor_row_counts({"a": 100}, {"a": 140}) == ["a: 100 → 140 (+40%)"]
     with pytest.raises(RowCountError):
         monitor_row_counts({"a": 100}, {"a": 40})
+
+
+def test_reconciliation_leaves_no_views_that_shadow_tables(env):
+    # In Fabric, a temp view named like a lakehouse table hides the table from later reads and MERGE.
+    _, lh = env
+    from mfgops.reconcile import reconcile
+
+    reconcile(lh)
+    names = {t.name for t in lh.spark.catalog.listTables() if t.isTemporary}
+    assert not any(n.startswith(("silver_", "gold_", "bronze_")) for n in names), names
