@@ -1,14 +1,16 @@
 """Build the Power BI report ``rpt_mfg_ops`` in PBIR format (Fabric Git / REST).
 
-Seven pages on the ``sm_mfg_ops`` semantic model:
+Nine pages on the ``sm_mfg_ops`` semantic model:
 
-1. Overview          KPI cards, revenue trend, OTIF by plant, scrap by plant
-2. Delivery          OTIF against target by month, by segment, worst customers (drill-through)
-3. Production        scrap rate and schedule adherence by plant and work centre
-4. Inventory & Supply stock value, items below safety stock, supplier on-time
-5. Data quality      pass rate, failing rules with owner and action, trend by run
-6. Pipeline runs     run history, success rate, duration per stage
-7. Customer orders   drill-through target: order lines of one customer
+1. Overview            KPI cards, revenue against last year, OTIF and scrap by plant
+2. Delivery            OTIF against target by month and segment, customers (drill-through)
+3. Production          scrap rate and schedule adherence by plant, work centres (drill-through)
+4. Inventory           stock value, items below safety stock, days of coverage
+5. Purchasing          supplier on-time rate by month, country and supplier
+6. Data quality        pass rate, failing rules with owner and action, trend by run
+7. Pipeline runs       run history, success rate, duration per stage
+8. Customer orders     drill-through: order lines of one customer
+9. Work centre orders  drill-through: production orders of one work centre
 
 ``report_files()`` returns every file of the ``rpt_mfg_ops.Report`` folder.
 ``tools/build_fabric_items.py --validate <json-schemas clone>`` writes them to
@@ -343,14 +345,15 @@ def pages() -> list[Page]:
             meas(P, "Schedule Adherence %"),
             meas(P, "Avg Start Delay (days)"),
         ],
-        "Work centres by scrap cost",
+        "Work centres by scrap cost (right-click a row → Drill through → Work centre orders)",
         sort=(meas(P, "Scrap Cost CHF"), "Descending"),
     )
     out.append(pg)
 
-    pg = Page("p04_inventory_supply", "Inventory & supply")
+    pg = Page("p04_inventory", "Inventory")
     pg.slicer(20, 12, 200, 56, col(PL, "plant_name"), "Plant")
     pg.slicer(230, 12, 200, 56, col(M, "material_type"), "Item category")
+    pg.slicer(440, 12, 220, 56, col(M, "product_family"), "Product family")
     kpi_row(
         pg,
         80,
@@ -358,8 +361,6 @@ def pages() -> list[Page]:
             (meas(INV, "Stock Value CHF"), "Stock value (CHF), last snapshot"),
             (meas(INV, "Items Below Safety Stock"), "Items below safety stock"),
             (meas(INV, "Median Days of Coverage"), "Median days of coverage"),
-            (meas(U, "Supplier On-Time %"), "Supplier on-time"),
-            (meas(U, "Open Purchase Orders"), "Open purchase orders"),
         ],
     )
     pg.line(
@@ -369,7 +370,7 @@ def pages() -> list[Page]:
         250,
         col(D, "year_month"),
         [meas(INV, "Stock Value CHF")],
-        "Stock value at month-end snapshot by plant",
+        "Stock value, last weekly snapshot of each month, by plant",
         series=col(PL, "plant_name"),
     )
     pg.bar(
@@ -382,34 +383,77 @@ def pages() -> list[Page]:
         "Items below safety stock by category",
         colors=AMBER,
     )
-    pg.bar(
+    pg.table(
         20,
         452,
-        620,
-        250,
-        col(SU, "supplier_name"),
-        [meas(U, "Supplier On-Time %")],
-        "Supplier on-time rate (worst first)",
-        sort=(meas(U, "Supplier On-Time %"), "Ascending"),
-        colors=TEAL,
-    )
-    pg.table(
-        652,
-        452,
-        608,
+        1240,
         250,
         [
             col(M, "material_id"),
             col(M, "description"),
+            col(M, "material_type"),
+            col(M, "safety_stock_qty"),
             meas(INV, "Stock Value CHF"),
+            meas(INV, "Items Below Safety Stock"),
             meas(INV, "Median Days of Coverage"),
         ],
-        "Items by stock value",
+        "Items by stock value (days of coverage include BOM-dependent demand)",
         sort=(meas(INV, "Stock Value CHF"), "Descending"),
     )
     out.append(pg)
 
-    pg = Page("p05_data_quality", "Data quality")
+    pg = Page("p05_purchasing", "Purchasing")
+    pg.slicer(20, 12, 200, 56, col(PL, "plant_name"), "Receiving plant")
+    pg.slicer(230, 12, 160, 56, col(D, "year"), "Year")
+    pg.slicer(400, 12, 200, 56, col(SU, "country"), "Supplier country")
+    kpi_row(
+        pg,
+        80,
+        [
+            (meas(U, "Supplier On-Time %"), "Supplier on-time"),
+            (meas(U, "Avg Supplier Days Late"), "Avg days late (late receipts)"),
+            (meas(U, "Open Purchase Orders"), "Open purchase orders"),
+        ],
+    )
+    pg.line(
+        20,
+        190,
+        820,
+        250,
+        col(D, "year_month"),
+        [meas(U, "Supplier On-Time %")],
+        "Supplier on-time rate by promised month",
+    )
+    pg.bar(
+        852,
+        190,
+        408,
+        250,
+        col(SU, "country"),
+        [meas(U, "Supplier On-Time %")],
+        "On-time rate by supplier country",
+        sort=(meas(U, "Supplier On-Time %"), "Ascending"),
+        colors=TEAL,
+    )
+    pg.table(
+        20,
+        452,
+        1240,
+        250,
+        [
+            col(SU, "supplier_id"),
+            col(SU, "supplier_name"),
+            col(SU, "country"),
+            meas(U, "Supplier On-Time %"),
+            meas(U, "Avg Supplier Days Late"),
+            meas(U, "Open Purchase Orders"),
+        ],
+        "Suppliers, worst on-time rate first",
+        sort=(meas(U, "Supplier On-Time %"), "Ascending"),
+    )
+    out.append(pg)
+
+    pg = Page("p06_data_quality", "Data quality")
     kpi_row(
         pg,
         12,
@@ -464,7 +508,7 @@ def pages() -> list[Page]:
     )
     out.append(pg)
 
-    pg = Page("p06_pipeline_runs", "Pipeline runs")
+    pg = Page("p07_pipeline_runs", "Pipeline runs")
     kpi_row(
         pg,
         12,
@@ -523,7 +567,7 @@ def pages() -> list[Page]:
     out.append(pg)
 
     drill_field = col(C, "customer_id")
-    pg = Page("p07_customer_orders", "Customer orders", drillthrough={"field": drill_field})
+    pg = Page("p08_customer_orders", "Customer orders", drillthrough={"field": drill_field})
     kpi_row(
         pg,
         12,
@@ -556,6 +600,42 @@ def pages() -> list[Page]:
         ],
         "Order lines of the selected customer (segment shown as valid on the order date)",
         sort=(col(D, "date"), "Descending"),
+    )
+    out.append(pg)
+
+    pg = Page("p09_work_center_orders", "Work centre orders", drillthrough={"field": col(WC, "work_center_id")})
+    kpi_row(
+        pg,
+        12,
+        [
+            (meas(P, "Completed Orders"), "Completed orders"),
+            (meas(P, "Scrap Rate %"), "Scrap rate"),
+            (meas(P, "Scrap Cost CHF"), "Scrap cost (CHF)"),
+            (meas(P, "Schedule Adherence %"), "Schedule adherence"),
+        ],
+    )
+    pg.table(
+        20,
+        120,
+        1240,
+        580,
+        [
+            col(P, "prod_order_id"),
+            col(M, "material_id"),
+            col(M, "description"),
+            col(P, "status"),
+            col(P, "planned_start"),
+            col(P, "planned_finish"),
+            col(P, "actual_start"),
+            col(P, "actual_finish"),
+            col(P, "planned_qty"),
+            col(P, "good_qty"),
+            col(P, "scrap_qty"),
+            col(P, "scrap_value_chf"),
+            col(P, "is_on_schedule"),
+        ],
+        "Production orders of the selected work centre",
+        sort=(col(P, "scrap_value_chf"), "Descending"),
     )
     out.append(pg)
     return out
@@ -651,11 +731,11 @@ def report_files() -> dict[str, str]:
             "width": 1280,
         }
         if pg.drillthrough:
-            fname = "drill_customer"
+            fname = "drill_" + pg.name
             page["type"] = "Drillthrough"
             page["visibility"] = "HiddenInViewMode"
             page["pageBinding"] = {
-                "name": "binding_customer",
+                "name": "binding_" + pg.name,
                 "type": "Drillthrough",
                 "parameters": [{"name": "param_customer", "boundFilter": fname, "fieldExpr": pg.drillthrough["field"]}],
             }
