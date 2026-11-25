@@ -1,0 +1,74 @@
+table gold_dim_material
+	lineageTag: ae5d8d9b-ac11-5c96-b613-e4a0e4e4868d
+
+	column material_id
+		dataType: string
+		lineageTag: 8fb313d4-7f10-57e8-80c8-d281570d3066
+		summarizeBy: none
+		sourceColumn: material_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: edbb0c67-fa37-5e1c-a9e3-48651a85b80b
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column material_type
+		dataType: string
+		lineageTag: 53881963-b943-5ff6-8624-76e9cc9f3ada
+		summarizeBy: none
+		sourceColumn: material_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_family
+		dataType: string
+		lineageTag: 5d6bb12a-b414-580f-bf1a-b7b2f0f1c3fa
+		summarizeBy: none
+		sourceColumn: product_family
+
+		annotation SummarizationSetBy = Automatic
+
+	column base_uom
+		dataType: string
+		lineageTag: 5005b2a9-2553-5ce5-809d-45be0fd19b86
+		summarizeBy: none
+		sourceColumn: base_uom
+
+		annotation SummarizationSetBy = Automatic
+
+	column standard_cost_chf
+		dataType: decimal
+		formatString: #,0.00
+		lineageTag: bf4409ae-642e-59cc-af79-923a594af315
+		summarizeBy: sum
+		sourceColumn: standard_cost_chf
+
+		annotation SummarizationSetBy = Automatic
+
+	column safety_stock_qty
+		dataType: int64
+		lineageTag: 6df399b9-c11b-5c80-931b-1308d1df6769
+		summarizeBy: sum
+		sourceColumn: safety_stock_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_time_days
+		dataType: int64
+		lineageTag: b9d3651c-0cc4-5fa4-a8c0-27bb35f8eb2e
+		summarizeBy: sum
+		sourceColumn: lead_time_days
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_material = entity
+		mode: directLake
+		source
+			entityName: gold_dim_material
+			schemaName: dbo
+			expressionSource: DatabaseQuery

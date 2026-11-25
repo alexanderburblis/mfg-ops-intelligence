@@ -1,0 +1,41 @@
+table gold_dim_plant
+	lineageTag: 24a591d6-97d0-5252-9bdb-295951f4f8d3
+
+	column plant_id
+		dataType: string
+		lineageTag: 71729e02-af06-518e-ae68-732d128f019a
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_name
+		dataType: string
+		lineageTag: f927430e-56e0-52bb-be77-84fbbed6f5b1
+		summarizeBy: none
+		sourceColumn: plant_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column country
+		dataType: string
+		lineageTag: 87caa9e3-751a-5610-a84f-421af19afeb1
+		summarizeBy: none
+		sourceColumn: country
+
+		annotation SummarizationSetBy = Automatic
+
+	column currency
+		dataType: string
+		lineageTag: f28682ba-26da-5cff-b0ca-ebeab171f7db
+		summarizeBy: none
+		sourceColumn: currency
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_plant = entity
+		mode: directLake
+		source
+			entityName: gold_dim_plant
+			schemaName: dbo
+			expressionSource: DatabaseQuery

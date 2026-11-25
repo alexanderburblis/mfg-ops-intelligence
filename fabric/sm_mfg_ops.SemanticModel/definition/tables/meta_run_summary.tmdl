@@ -1,0 +1,152 @@
+/// One row per pipeline run: mode, status, duration, volumes.
+table meta_run_summary
+	lineageTag: 3f0bc1d4-54f1-5618-90bb-f63a004d23ff
+
+	measure Runs = COUNTROWS ( meta_run_summary )
+		formatString: #,0
+		displayFolder: Monitoring
+		lineageTag: 44acae0c-db68-510a-a94e-6b8a5e506abb
+
+	measure 'Failed Runs' = CALCULATE ( COUNTROWS ( meta_run_summary ), meta_run_summary[status] = "failed" )
+		formatString: #,0
+		displayFolder: Monitoring
+		lineageTag: d54d449c-a336-54e2-96c8-6c60ff62037a
+
+	measure 'Run Success Rate %' = DIVIDE ( [Runs] - [Failed Runs], [Runs] )
+		formatString: 0.0%
+		displayFolder: Monitoring
+		lineageTag: 68227bf7-62f8-555f-b288-5bd9309b1332
+
+	measure 'Avg Run Duration (s)' = AVERAGE ( meta_run_summary[seconds] )
+		formatString: #,0
+		displayFolder: Monitoring
+		lineageTag: d9024cc6-c02b-59e5-81dd-fe3f246022e1
+
+	measure 'Last Run Status' = VAR LastStart = MAX ( meta_run_summary[started_at] ) RETURN CALCULATE ( MAX ( meta_run_summary[status] ), meta_run_summary[started_at] = LastStart )
+		displayFolder: Monitoring
+		lineageTag: 27f71af3-9cb8-51b7-8625-cce2b7d669f6
+
+	measure 'Last Successful Run' = CALCULATE ( MAX ( meta_run_summary[finished_at] ), meta_run_summary[status] = "success" )
+		formatString: yyyy-mm-dd hh:nn
+		displayFolder: Monitoring
+		lineageTag: de16b938-7e85-5110-a247-aacb68f23451
+
+	measure 'Rows Quarantined' = SUM ( meta_run_summary[rows_quarantined] )
+		formatString: #,0
+		displayFolder: Monitoring
+		lineageTag: e00c871d-85c2-50cd-a1d3-4c1d4854b7d2
+
+	column run_id
+		dataType: string
+		lineageTag: 72c0c165-7829-57c1-a0e3-ae76fe94e68d
+		summarizeBy: none
+		sourceColumn: run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column load_mode
+		dataType: string
+		lineageTag: b83fe101-4aed-5305-99cf-ecceaaffb40d
+		summarizeBy: none
+		sourceColumn: load_mode
+
+		annotation SummarizationSetBy = Automatic
+
+	column status
+		dataType: string
+		lineageTag: d42225e5-9b86-5fbd-a830-27213933c822
+		summarizeBy: none
+		sourceColumn: status
+
+		annotation SummarizationSetBy = Automatic
+
+	column failed_stage
+		dataType: string
+		lineageTag: 4b3ab9a4-fc45-5643-a997-d170080a7cad
+		summarizeBy: none
+		sourceColumn: failed_stage
+
+		annotation SummarizationSetBy = Automatic
+
+	column message
+		dataType: string
+		lineageTag: 148b1972-0f70-5be3-8d70-e333ca2eaeaa
+		summarizeBy: none
+		sourceColumn: message
+
+		annotation SummarizationSetBy = Automatic
+
+	column started_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: ecabfc6e-6d70-5cfa-a295-45c5aaf2cbd2
+		summarizeBy: none
+		sourceColumn: started_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column finished_at
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: a18f2af0-6e97-5dce-8293-f8f0f76dd26a
+		summarizeBy: none
+		sourceColumn: finished_at
+
+		annotation SummarizationSetBy = Automatic
+
+	column seconds
+		dataType: double
+		formatString: #,0.0
+		lineageTag: e3b5475d-66d0-5089-a775-acb8994d64d1
+		summarizeBy: sum
+		sourceColumn: seconds
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_received
+		dataType: int64
+		lineageTag: e5357741-138c-5166-89af-746ce3a9e40e
+		summarizeBy: sum
+		sourceColumn: rows_received
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_quarantined
+		dataType: int64
+		lineageTag: d29a8659-2415-5fe7-808b-ed32f1c06287
+		summarizeBy: sum
+		sourceColumn: rows_quarantined
+
+		annotation SummarizationSetBy = Automatic
+
+	column max_error_rate
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 317cc54d-2a6b-5a26-8fc8-a3091c4b8020
+		summarizeBy: sum
+		sourceColumn: max_error_rate
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_inserted
+		dataType: int64
+		lineageTag: 39484619-3d8e-56d0-8024-7e4da46a4b28
+		summarizeBy: sum
+		sourceColumn: rows_inserted
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_updated
+		dataType: int64
+		lineageTag: 64f89318-7e0e-5722-95f2-9ee611c13cfc
+		summarizeBy: sum
+		sourceColumn: rows_updated
+
+		annotation SummarizationSetBy = Automatic
+
+	partition meta_run_summary = entity
+		mode: directLake
+		source
+			entityName: meta_run_summary
+			schemaName: dbo
+			expressionSource: DatabaseQuery

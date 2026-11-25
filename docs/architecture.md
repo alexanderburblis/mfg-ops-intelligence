@@ -41,7 +41,7 @@ Deployed on 25 November 2026 to a Microsoft Fabric workspace (`mfg-ops-intellige
 | Retries with backoff for transient errors | yes | no (needs a flaky dependency to test) | yes, plus activity retries in the Data Pipeline |
 | Reconciliation: silver vs gold totals, KPI recalculation | yes | yes | yes, 5 of 5 passed |
 | CI: lint, tests, wheel build on every push | yes | runs on GitHub | n/a |
-| Orchestration | `orchestrate.py` | yes | Data Pipeline `pl_mfg_ops_daily` running notebook `nb_04_orchestrated_run` |
+| Orchestration | `orchestrate.py` | yes | Data Pipeline `pl_mfg_ops_daily` running notebook `nb_04_orchestrated_run`; pipeline run on 25 Nov 2026 succeeded in 24 min 50 s (includes Spark session start and package install on F2) |
 | Semantic model | 11 gold tables, 14 relationships, 22 measures | measures checked by DAX query against the pipeline output | yes, Direct Lake model `sm_mfg_ops` |
 | Power BI report pages | not yet | – | – |
 

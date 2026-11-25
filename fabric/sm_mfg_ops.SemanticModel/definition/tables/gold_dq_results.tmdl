@@ -1,0 +1,137 @@
+/// One row per data-quality rule per pipeline run.
+table gold_dq_results
+	lineageTag: 92a7f7a8-8ffd-5545-a860-e97a1f33c755
+
+	measure 'Latest DQ Run' = MAX ( gold_dq_results[run_ts] )
+		formatString: dd mmm hh:nn
+		displayFolder: Data quality
+		lineageTag: abb6d109-31ae-5be4-bccd-797b0dc6a4ba
+
+	measure 'Rows Checked (latest run)' = VAR LastRun = MAXX ( ALL ( gold_dq_results ), gold_dq_results[run_id] ) RETURN CALCULATE ( SUM ( gold_dq_results[rows_checked] ), gold_dq_results[run_id] = LastRun )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: 79284fb7-15d6-59da-be64-f5dbc2f25864
+
+	measure 'Rows Failed (latest run)' = VAR LastRun = MAXX ( ALL ( gold_dq_results ), gold_dq_results[run_id] ) RETURN CALCULATE ( SUM ( gold_dq_results[rows_failed] ), gold_dq_results[run_id] = LastRun )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: 9d07c0c3-f68e-591a-8746-5852da5a71c4
+
+	/// Share of rule checks that passed in the latest run.
+	measure 'DQ Pass Rate %' = 1 - DIVIDE ( [Rows Failed (latest run)], [Rows Checked (latest run)] )
+		formatString: 0.00%
+		displayFolder: Data quality
+		lineageTag: 494c1530-f7b5-5856-8236-557132096cdd
+
+	measure 'Rules Failing (latest run)' = VAR LastRun = MAXX ( ALL ( gold_dq_results ), gold_dq_results[run_id] ) RETURN CALCULATE ( COUNTROWS ( gold_dq_results ), gold_dq_results[run_id] = LastRun, gold_dq_results[rows_failed] > 0 )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: 8a367ebf-8a88-59b8-9930-c77eff3c4940
+
+	/// Across the runs in the filter context.
+	measure 'Rows Failed' = SUM ( gold_dq_results[rows_failed] )
+		formatString: #,0
+		displayFolder: Data quality
+		lineageTag: d8226d98-d390-52b7-805b-d0137d101bf3
+
+	/// Pass rate for the runs in the filter context, for trends.
+	measure 'DQ Pass Rate per Run %' = 1 - DIVIDE ( SUM ( gold_dq_results[rows_failed] ), SUM ( gold_dq_results[rows_checked] ) )
+		formatString: 0.00%
+		displayFolder: Data quality
+		lineageTag: 36441af1-fb95-5e65-8022-3aa0ee4dc4ee
+
+	column run_id
+		dataType: string
+		lineageTag: d5c0a6b2-05a8-5adf-8c06-00b9ca2eb785
+		summarizeBy: none
+		sourceColumn: run_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column run_ts
+		dataType: dateTime
+		formatString: yyyy-mm-dd hh:nn
+		lineageTag: 39672c16-f7b7-5da7-8c37-c71ba79e9efb
+		summarizeBy: none
+		sourceColumn: run_ts
+
+		annotation SummarizationSetBy = Automatic
+
+	column rule_id
+		dataType: string
+		lineageTag: b2841c18-386b-5351-9b67-212425996fac
+		summarizeBy: none
+		sourceColumn: rule_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column table_name
+		dataType: string
+		lineageTag: 486a51ca-b62a-5560-b161-e6922fc3b3d4
+		summarizeBy: none
+		sourceColumn: table_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column dimension
+		dataType: string
+		lineageTag: 4b4fd6c0-0b7a-5c8f-aeb7-0331027c1f6c
+		summarizeBy: none
+		sourceColumn: dimension
+
+		annotation SummarizationSetBy = Automatic
+
+	column severity
+		dataType: string
+		lineageTag: d3f2497a-3a3a-5d78-a7fb-33f43456275a
+		summarizeBy: none
+		sourceColumn: severity
+
+		annotation SummarizationSetBy = Automatic
+
+	column description
+		dataType: string
+		lineageTag: 8f4bbeb8-5f88-52e1-afd5-9399b7e496fe
+		summarizeBy: none
+		sourceColumn: description
+
+		annotation SummarizationSetBy = Automatic
+
+	column owner
+		dataType: string
+		lineageTag: d07f9a3c-b1d1-5751-bbb3-b223fd865c8b
+		summarizeBy: none
+		sourceColumn: owner
+
+		annotation SummarizationSetBy = Automatic
+
+	column corrective_action
+		dataType: string
+		lineageTag: 9f711158-bb43-5e36-b6f7-09c53edac71f
+		summarizeBy: none
+		sourceColumn: corrective_action
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_checked
+		dataType: int64
+		lineageTag: c5c7abe0-d793-5a27-b182-9bc79b9f1dc2
+		summarizeBy: sum
+		sourceColumn: rows_checked
+
+		annotation SummarizationSetBy = Automatic
+
+	column rows_failed
+		dataType: int64
+		lineageTag: 80625d16-7275-5c80-b095-220aa003f23a
+		summarizeBy: sum
+		sourceColumn: rows_failed
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dq_results = entity
+		mode: directLake
+		source
+			entityName: gold_dq_results
+			schemaName: dbo
+			expressionSource: DatabaseQuery

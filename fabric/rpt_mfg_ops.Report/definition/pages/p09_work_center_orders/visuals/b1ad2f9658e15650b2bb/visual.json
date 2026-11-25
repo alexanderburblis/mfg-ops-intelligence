@@ -1,0 +1,376 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "b1ad2f9658e15650b2bb",
+  "position": {
+    "x": 20,
+    "y": 120,
+    "z": 500,
+    "width": 1240,
+    "height": 580,
+    "tabOrder": 500
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "prod_order_id"
+                }
+              },
+              "queryRef": "gold_fact_production_order.prod_order_id",
+              "nativeQueryRef": "prod_order_id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_dim_material"
+                    }
+                  },
+                  "Property": "material_id"
+                }
+              },
+              "queryRef": "gold_dim_material.material_id",
+              "nativeQueryRef": "material_id"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_dim_material"
+                    }
+                  },
+                  "Property": "description"
+                }
+              },
+              "queryRef": "gold_dim_material.description",
+              "nativeQueryRef": "description"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "status"
+                }
+              },
+              "queryRef": "gold_fact_production_order.status",
+              "nativeQueryRef": "status"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "planned_start"
+                }
+              },
+              "queryRef": "gold_fact_production_order.planned_start",
+              "nativeQueryRef": "planned_start"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "planned_finish"
+                }
+              },
+              "queryRef": "gold_fact_production_order.planned_finish",
+              "nativeQueryRef": "planned_finish"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "actual_start"
+                }
+              },
+              "queryRef": "gold_fact_production_order.actual_start",
+              "nativeQueryRef": "actual_start"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "actual_finish"
+                }
+              },
+              "queryRef": "gold_fact_production_order.actual_finish",
+              "nativeQueryRef": "actual_finish"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "planned_qty"
+                }
+              },
+              "queryRef": "gold_fact_production_order.planned_qty",
+              "nativeQueryRef": "planned_qty"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "good_qty"
+                }
+              },
+              "queryRef": "gold_fact_production_order.good_qty",
+              "nativeQueryRef": "good_qty"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "scrap_qty"
+                }
+              },
+              "queryRef": "gold_fact_production_order.scrap_qty",
+              "nativeQueryRef": "scrap_qty"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "scrap_value_chf"
+                }
+              },
+              "queryRef": "gold_fact_production_order.scrap_value_chf",
+              "nativeQueryRef": "scrap_value_chf"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "gold_fact_production_order"
+                    }
+                  },
+                  "Property": "is_on_schedule"
+                }
+              },
+              "queryRef": "gold_fact_production_order.is_on_schedule",
+              "nativeQueryRef": "is_on_schedule"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "gold_fact_production_order"
+                  }
+                },
+                "Property": "scrap_value_chf"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true,
+    "objects": {
+      "columnHeaders": [
+        {
+          "properties": {
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            },
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#17365D'"
+                    }
+                  }
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Production orders of the selected work centre'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#17365D'"
+                    }
+                  }
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "11D"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#D9DEE5'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "4D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

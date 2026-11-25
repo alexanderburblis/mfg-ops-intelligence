@@ -1,0 +1,67 @@
+Planted defects: {'so_unknown_customer': 15, 'so_negative_qty': 10, 'so_missing_requested_date': 15, 'prod_finish_before_start': 12, 'prod_implausible_yield': 18, 'prod_duplicate_id': 8, 'inv_negative_stock': 25, 'dlv_orphan': 10}
+[validate_sources  ] success    8.2s  rows=68422    11 extracts match their contracts (full load)
+[monitor_row_counts] success    0.1s  rows=0        row counts in line with the last successful run
+[bronze            ] success    5.7s  rows=68422    raw extracts landed
+[profile           ] success    8.1s  rows=75       column profile written
+[silver            ] success   19.4s  rows=121      121 rows quarantined
+[quality_gate      ] success    0.0s  rows=0        passed (highest error rate production_orders 0.66%, limit 2%)
+[gold              ] success    5.7s  rows=60358    star schema refreshed
+[reconcile         ] success    1.6s  rows=5        5 of 5 reconciliation checks passed
+{
+ "run_id": "20261125T143233-1a4e22",
+ "status": "success",
+ "failed_stage": null
+}
++-------+-------------------+--------+-----------+-------------------+
+|rule_id|table_name         |severity|rows_failed|owner              |
++-------+-------------------+--------+-----------+-------------------+
+|DL-01  |deliveries         |error   |10         |Logistics          |
+|IN-01  |inventory_snapshots|error   |25         |Warehouse          |
+|PR-01  |production_orders  |error   |16         |ERP / IT           |
+|PR-02  |production_orders  |error   |12         |Production planning|
+|PR-03  |production_orders  |error   |18         |Production         |
+|SO-01  |sales_orders       |error   |15         |Customer service   |
+|SO-02  |sales_orders       |error   |10         |Customer service   |
+|SO-03  |sales_orders       |error   |15         |Customer service   |
++-------+-------------------+--------+-----------+-------------------+
+
+PASS Sales order quantity, silver vs gold
+PASS Production good quantity, silver vs gold
+PASS Inventory snapshot rows, silver vs gold
+PASS OTIF %, recalculated from silver vs gold flags
+PASS Scrap rate %, recalculated from silver vs gold
+Change extract: {'rows_customers': 9, 'rows_sales_orders': 300, 'rows_deliveries': 266, 'rows_production_orders': 182, 'rows_inventory_snapshots': 780, 'rows_purchase_orders': 317, 'inc_so_negative_qty': 2}
+[validate_sources  ] success    0.8s  rows=1854     6 extracts match their contracts (incremental load)
+[monitor_row_counts] success    0.0s  rows=0        incremental load: volumes vary by design, row-count comparison applies to full loads
+[bronze            ] success    2.1s  rows=1854     raw extracts appended to history
+[profile           ] success    3.6s  rows=48       column profile written
+[silver            ] success   14.9s  rows=2        2 rows quarantined, merged into silver: 1667 inserted, 185 updated
+[quality_gate      ] success    0.0s  rows=0        passed (highest error rate sales_orders 0.67%, limit 2%)
+[gold              ] success    4.3s  rows=61765    star schema refreshed
+[reconcile         ] success    1.4s  rows=5        5 of 5 reconciliation checks passed
+{"run_id": "20261125T143327-7ef32e", "mode": "incremental", "status": "success", "message": ""}
+Customer history for customers that changed segment (SCD type 2):
++-----------+-------------+-------------+-------------+----------+----------+----------+-----------+
+|customer_id|customer_name|region       |segment      |valid_from|valid_to  |is_current|customer_sk|
++-----------+-------------+-------------+-------------+----------+----------+----------+-----------+
+|C00005     |Customer 005 |Greater China|Industrial   |1900-01-01|2026-11-14|false     |5          |
+|C00005     |Customer 005 |Greater China|Semiconductor|2026-11-15|9999-12-31|true      |121        |
+|C00027     |Customer 027 |Americas     |Semiconductor|1900-01-01|2026-11-14|false     |27         |
+|C00027     |Customer 027 |Americas     |Display      |2026-11-15|9999-12-31|true      |122        |
+|C00045     |Customer 045 |Greater China|Industrial   |1900-01-01|2026-11-14|false     |45         |
+|C00045     |Customer 045 |Greater China|Semiconductor|2026-11-15|9999-12-31|true      |123        |
+|C00048     |Customer 048 |Asia-Pacific |Research     |1900-01-01|2026-11-14|false     |48         |
+|C00048     |Customer 048 |Asia-Pacific |Industrial   |2026-11-15|9999-12-31|true      |124        |
+|C00056     |Customer 056 |Asia-Pacific |Display      |1900-01-01|2026-11-14|false     |56         |
+|C00056     |Customer 056 |Asia-Pacific |Solar        |2026-11-15|9999-12-31|true      |125        |
+|C00065     |Customer 065 |Greater China|Industrial   |1900-01-01|2026-11-14|false     |65         |
+|C00065     |Customer 065 |Greater China|Semiconductor|2026-11-15|9999-12-31|true      |126        |
++-----------+-------------+-------------+-------------+----------+----------+----------+-----------+
+
++----------------------+-----------+-------+-------+-------------+----------------+-------------+------------+
+|run_id                |load_mode  |status |seconds|rows_received|rows_quarantined|rows_inserted|rows_updated|
++----------------------+-----------+-------+-------+-------------+----------------+-------------+------------+
+|20261125T143327-7ef32e|incremental|success|28.56  |1854         |2               |1667         |185         |
+|20261125T143233-1a4e22|full       |success|52.25  |68422        |121             |68301        |0           |
++----------------------+-----------+-------+-------+-------------+----------------+-------------+------------+
+

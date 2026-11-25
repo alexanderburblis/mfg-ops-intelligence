@@ -1,0 +1,7 @@
+/// Plant managers see their own plant. Users are listed in gold_security_plant_access.
+role 'Plant access'
+	modelPermission: read
+
+	tablePermission gold_dim_plant = [plant_id] IN CALCULATETABLE ( VALUES ( gold_security_plant_access[plant_id] ), gold_security_plant_access[user_principal_name] = USERPRINCIPALNAME () )
+
+	tablePermission gold_security_plant_access = [user_principal_name] = USERPRINCIPALNAME ()

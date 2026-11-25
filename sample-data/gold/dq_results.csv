@@ -1,26 +1,45 @@
 run_id,run_ts,rule_id,table_name,dimension,severity,description,owner,corrective_action,rows_checked,rows_failed
-20261125T124106-e0249c,2026-11-25 11:41:27.831599,PL-01,plants,validity,warning,Plant currency is a supported currency,Finance,Add the currency to FX translation,3,0
-20261125T124106-e0249c,2026-11-25 11:41:28.526960,MA-01,materials,validity,error,"Material type is FERT, HALB or ROH",Master data,Correct the material type,130,0
-20261125T124106-e0249c,2026-11-25 11:41:28.526960,MA-02,materials,consistency,warning,Base unit of measure is PC (one unit across the model),Master data,Add a unit conversion or correct the unit,130,0
-20261125T124106-e0249c,2026-11-25 11:41:28.526960,TY-MAT,materials,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,130,0
-20261125T124106-e0249c,2026-11-25 11:41:29.501207,TY-BOM,bom,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,290,0
-20261125T124106-e0249c,2026-11-25 11:41:30.193262,TY-WOR,work_centers,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,12,0
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-01,sales_orders,integrity,error,Customer exists in customer master,Customer service,Create or correct the customer in the ERP master data,9000,15
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-02,sales_orders,validity,error,Order quantity is positive,Customer service,Correct the order line quantity,9000,10
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-03,sales_orders,completeness,error,Requested delivery date is filled,Customer service,Enter the customer's requested date on the order,9000,15
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-04,sales_orders,validity,warning,Requested date is not before order date,Customer service,Check the order dates with the customer,9000,0
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-05,sales_orders,integrity,error,Plant code exists in the plant master,ERP / IT,Fix the plant mapping in the ERP extract,9000,0
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,SO-06,sales_orders,validity,error,Net price is positive,Pricing,Correct the price condition on the order,9000,0
-20261125T124106-e0249c,2026-11-25 11:41:32.764276,TY-SAL,sales_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,9000,0
-20261125T124106-e0249c,2026-11-25 11:41:34.051638,DL-01,deliveries,integrity,error,Delivery refers to an existing sales order line,Logistics,Link the delivery to its order in the ERP,8467,10
-20261125T124106-e0249c,2026-11-25 11:41:34.051638,TY-DEL,deliveries,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,8467,0
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,PR-01,production_orders,uniqueness,error,Production order ID is unique,ERP / IT,Remove the duplicate from the extract and check the interface,7008,16
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,PR-02,production_orders,consistency,error,Actual finish is not before actual start,Production planning,Correct the confirmation dates,7008,12
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,PR-03,production_orders,validity,error,Good plus scrap quantity is plausible (max 150% of plan),Production,Correct the yield or scrap confirmation,7008,18
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,PR-04,production_orders,integrity,warning,Work centre belongs to the same plant,Production planning,Check the routing,7008,0
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,PR-05,production_orders,validity,error,"Status is a known value (REL, TECO)",ERP / IT,Map the new status in the extract,7008,0
-20261125T124106-e0249c,2026-11-25 11:41:35.322400,TY-PRO,production_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,7008,0
-20261125T124106-e0249c,2026-11-25 11:41:36.762912,IN-01,inventory_snapshots,validity,error,Stock on hand is not negative,Warehouse,Post the missing goods receipt or correct the stock,37440,25
-20261125T124106-e0249c,2026-11-25 11:41:36.762912,TY-INV,inventory_snapshots,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,37440,0
-20261125T124106-e0249c,2026-11-25 11:41:37.541080,PU-01,purchase_orders,consistency,warning,Goods receipt is not before the order date,Procurement,Check the goods receipt posting date,6000,0
-20261125T124106-e0249c,2026-11-25 11:41:37.541080,TY-PUR,purchase_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,6000,0
+20261125T143632-b0d6be,2026-11-25 13:36:54.883502,PL-01,plants,validity,warning,Plant currency is a supported currency,Finance,Add the currency to FX translation,3,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-01,sales_orders,integrity,error,Customer exists in customer master,Customer service,Create or correct the customer in the ERP master data,300,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-02,sales_orders,validity,error,Order quantity is positive,Customer service,Correct the order line quantity,300,2
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-03,sales_orders,completeness,error,Requested delivery date is filled,Customer service,Enter the customer's requested date on the order,300,0
+20261125T143632-b0d6be,2026-11-25 13:36:56.535563,MA-01,materials,validity,error,"Item category is FG, SFG or RM",Master data,Correct the material type,130,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-04,sales_orders,validity,warning,Requested date is not before order date,Customer service,Check the order dates with the customer,300,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-05,sales_orders,integrity,error,Plant code exists in the plant master,ERP / IT,Fix the plant mapping in the ERP extract,300,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,SO-06,sales_orders,validity,error,Net price is positive,Pricing,Correct the price condition on the order,300,0
+20261125T143721-27d4a0,2026-11-25 13:37:32.128747,TY-SAL,sales_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,300,0
+20261125T143632-b0d6be,2026-11-25 13:36:56.535563,MA-02,materials,consistency,warning,Base unit of measure is PC (one unit across the model),Master data,Add a unit conversion or correct the unit,130,0
+20261125T143632-b0d6be,2026-11-25 13:36:56.535563,TY-MAT,materials,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,130,0
+20261125T143721-27d4a0,2026-11-25 13:37:34.405236,DL-01,deliveries,integrity,error,Delivery refers to an existing sales order line,Logistics,Link the delivery to its order in the ERP,266,0
+20261125T143721-27d4a0,2026-11-25 13:37:34.405236,TY-DEL,deliveries,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,266,0
+20261125T143632-b0d6be,2026-11-25 13:36:58.109354,TY-BOM,bom,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,290,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,PR-01,production_orders,uniqueness,error,Production order ID is unique,ERP / IT,Remove the duplicate from the extract and check the interface,182,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,PR-02,production_orders,consistency,error,Actual finish is not before actual start,Production planning,Correct the confirmation dates,182,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,PR-03,production_orders,validity,error,Good plus scrap quantity is plausible (max 150% of plan),Production,Correct the yield or scrap confirmation,182,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,PR-04,production_orders,integrity,warning,Work centre belongs to the same plant,Production planning,Check the routing,182,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,PR-05,production_orders,validity,error,Status is a known D365 production status,ERP / IT,Map the new status in the extract,182,0
+20261125T143721-27d4a0,2026-11-25 13:37:36.293522,TY-PRO,production_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,182,0
+20261125T143632-b0d6be,2026-11-25 13:36:59.301737,TY-WOR,work_centers,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,12,0
+20261125T143721-27d4a0,2026-11-25 13:37:38.259865,IN-01,inventory_snapshots,validity,error,Stock on hand is not negative,Warehouse,Post the missing goods receipt or correct the stock,780,0
+20261125T143721-27d4a0,2026-11-25 13:37:38.259865,TY-INV,inventory_snapshots,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,780,0
+20261125T143721-27d4a0,2026-11-25 13:37:39.943259,PU-01,purchase_orders,consistency,warning,Goods receipt is not before the order date,Procurement,Check the goods receipt posting date,317,0
+20261125T143721-27d4a0,2026-11-25 13:37:39.943259,TY-PUR,purchase_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,317,0
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-01,sales_orders,integrity,error,Customer exists in customer master,Customer service,Create or correct the customer in the ERP master data,9000,15
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-02,sales_orders,validity,error,Order quantity is positive,Customer service,Correct the order line quantity,9000,10
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-03,sales_orders,completeness,error,Requested delivery date is filled,Customer service,Enter the customer's requested date on the order,9000,15
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-04,sales_orders,validity,warning,Requested date is not before order date,Customer service,Check the order dates with the customer,9000,0
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-05,sales_orders,integrity,error,Plant code exists in the plant master,ERP / IT,Fix the plant mapping in the ERP extract,9000,0
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,SO-06,sales_orders,validity,error,Net price is positive,Pricing,Correct the price condition on the order,9000,0
+20261125T143632-b0d6be,2026-11-25 13:37:03.351674,TY-SAL,sales_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,9000,0
+20261125T143632-b0d6be,2026-11-25 13:37:05.367743,DL-01,deliveries,integrity,error,Delivery refers to an existing sales order line,Logistics,Link the delivery to its order in the ERP,8394,10
+20261125T143632-b0d6be,2026-11-25 13:37:05.367743,TY-DEL,deliveries,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,8394,0
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,PR-01,production_orders,uniqueness,error,Production order ID is unique,ERP / IT,Remove the duplicate from the extract and check the interface,7008,16
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,PR-02,production_orders,consistency,error,Actual finish is not before actual start,Production planning,Correct the confirmation dates,7008,12
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,PR-03,production_orders,validity,error,Good plus scrap quantity is plausible (max 150% of plan),Production,Correct the yield or scrap confirmation,7008,18
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,PR-04,production_orders,integrity,warning,Work centre belongs to the same plant,Production planning,Check the routing,7008,0
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,PR-05,production_orders,validity,error,Status is a known D365 production status,ERP / IT,Map the new status in the extract,7008,0
+20261125T143632-b0d6be,2026-11-25 13:37:07.243334,TY-PRO,production_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,7008,0
+20261125T143632-b0d6be,2026-11-25 13:37:08.902811,IN-01,inventory_snapshots,validity,error,Stock on hand is not negative,Warehouse,Post the missing goods receipt or correct the stock,37440,25
+20261125T143632-b0d6be,2026-11-25 13:37:08.902811,TY-INV,inventory_snapshots,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,37440,0
+20261125T143632-b0d6be,2026-11-25 13:37:10.473398,PU-01,purchase_orders,consistency,warning,Goods receipt is not before the order date,Procurement,Check the goods receipt posting date,6000,0
+20261125T143632-b0d6be,2026-11-25 13:37:10.473398,TY-PUR,purchase_orders,type,error,Every typed column converts to its data type,ERP / IT,Fix the field format in the extract,6000,0

@@ -1,0 +1,137 @@
+/// One row per purchase order line, with promised and receipt dates.
+table gold_fact_purchase_order
+	lineageTag: 24d40dd7-13f0-53c3-a367-6ef9105ee4b9
+
+	measure 'Supplier On-Time %' = DIVIDE ( CALCULATE ( COUNTROWS ( gold_fact_purchase_order ), gold_fact_purchase_order[is_on_time] = TRUE () ), CALCULATE ( COUNTROWS ( gold_fact_purchase_order ), gold_fact_purchase_order[is_received] = TRUE () ) )
+		formatString: 0.0%
+		displayFolder: Purchasing
+		lineageTag: 2451d2e9-c5be-59b9-89b8-e86ccc73a26a
+
+	measure 'Avg Supplier Days Late' = CALCULATE ( AVERAGE ( gold_fact_purchase_order[days_late] ), gold_fact_purchase_order[days_late] > 0 )
+		formatString: #,0.0
+		displayFolder: Purchasing
+		lineageTag: 793c9072-d35b-5f7b-b4cf-c22cda19600c
+
+	measure 'Open Purchase Orders' = CALCULATE ( COUNTROWS ( gold_fact_purchase_order ), gold_fact_purchase_order[is_received] = FALSE () )
+		formatString: #,0
+		displayFolder: Purchasing
+		lineageTag: 42df89df-3523-5465-8736-62c64c7ea22a
+
+	column purchase_order_id
+		dataType: string
+		lineageTag: 3067c29c-653e-545c-889b-d919da1e52c1
+		summarizeBy: none
+		sourceColumn: purchase_order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column supplier_id
+		dataType: string
+		isHidden
+		lineageTag: defcd769-c043-5f0f-a359-02627a207c01
+		summarizeBy: none
+		sourceColumn: supplier_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column material_id
+		dataType: string
+		isHidden
+		lineageTag: 55167fbf-6b8d-5d39-ae6e-29152f67dd2b
+		summarizeBy: none
+		sourceColumn: material_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column plant_id
+		dataType: string
+		isHidden
+		lineageTag: c71a232c-3b4b-53e0-bf9f-9f30716f398f
+		summarizeBy: none
+		sourceColumn: plant_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 9459af47-54a3-525e-8fae-21f9fe6ed714
+		summarizeBy: none
+		sourceColumn: order_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column promised_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: d600e888-948d-52b0-b8cf-ebbe856bed52
+		summarizeBy: none
+		sourceColumn: promised_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column received_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: fe66c2fa-6dde-5ace-b82e-01583b6396f5
+		summarizeBy: none
+		sourceColumn: received_date
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_qty
+		dataType: int64
+		lineageTag: 0f3bb14f-55b7-5b09-a34e-811de5dbb053
+		summarizeBy: sum
+		sourceColumn: order_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_received
+		dataType: boolean
+		lineageTag: 325f8339-6c39-5f76-b4a4-0c09bd3755da
+		summarizeBy: none
+		sourceColumn: is_received
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_on_time
+		dataType: boolean
+		lineageTag: fe64e6b7-345b-5cf5-b4b7-a6e3feddafd8
+		summarizeBy: none
+		sourceColumn: is_on_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column days_late
+		dataType: int64
+		lineageTag: 20897da4-8afa-5b1d-8614-1ba08e083387
+		summarizeBy: sum
+		sourceColumn: days_late
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_date_key
+		dataType: int64
+		isHidden
+		lineageTag: a8d8edf4-c1fc-519f-b2dd-d5bc0224e40c
+		summarizeBy: none
+		sourceColumn: order_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column promised_date_key
+		dataType: int64
+		isHidden
+		lineageTag: f967105d-9eca-5d05-a0a2-11ea1b8be260
+		summarizeBy: none
+		sourceColumn: promised_date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_fact_purchase_order = entity
+		mode: directLake
+		source
+			entityName: gold_fact_purchase_order
+			schemaName: dbo
+			expressionSource: DatabaseQuery

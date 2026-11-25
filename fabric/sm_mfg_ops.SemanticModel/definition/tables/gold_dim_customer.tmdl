@@ -1,0 +1,77 @@
+/// Customer versions (slowly changing dimension type 2). customer_sk is the version key.
+table gold_dim_customer
+	lineageTag: cbe07ea4-b5ec-578e-aeba-611e83cf9254
+
+	column customer_sk
+		dataType: int64
+		isHidden
+		lineageTag: 3009b6f7-2cf0-5b46-8b2f-b967521b098d
+		summarizeBy: none
+		sourceColumn: customer_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: a4a87450-072f-5b6a-a522-7547e91ea908
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_name
+		dataType: string
+		lineageTag: b9948abd-0aeb-594e-b096-8676d497cf71
+		summarizeBy: none
+		sourceColumn: customer_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column region
+		dataType: string
+		lineageTag: 5214452b-01a4-5fce-8cdf-a937a33c2b97
+		summarizeBy: none
+		sourceColumn: region
+
+		annotation SummarizationSetBy = Automatic
+
+	column segment
+		dataType: string
+		lineageTag: 588e4801-3267-57dd-a9a8-85db9fd33021
+		summarizeBy: none
+		sourceColumn: segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column valid_from
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 579e5371-2b94-5144-a4a3-09225ba047f2
+		summarizeBy: none
+		sourceColumn: valid_from
+
+		annotation SummarizationSetBy = Automatic
+
+	column valid_to
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 95d2ce22-66a4-5e1a-bf69-0b922c0c48e4
+		summarizeBy: none
+		sourceColumn: valid_to
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_current
+		dataType: boolean
+		lineageTag: 530b8183-29c0-54b4-96d7-a33f31ae00f0
+		summarizeBy: none
+		sourceColumn: is_current
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_customer = entity
+		mode: directLake
+		source
+			entityName: gold_dim_customer
+			schemaName: dbo
+			expressionSource: DatabaseQuery

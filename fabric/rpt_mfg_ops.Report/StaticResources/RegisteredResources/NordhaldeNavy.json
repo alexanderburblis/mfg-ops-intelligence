@@ -1,0 +1,49 @@
+{
+  "name": "Nordhalde Navy",
+  "dataColors": [
+    "#17365D",
+    "#2E7D9A",
+    "#8AA6C1",
+    "#D99A2B",
+    "#3C8D5A",
+    "#B23A3A",
+    "#666666",
+    "#C9D3DE"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#333333",
+  "tableAccent": "#17365D",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold",
+      "color": "#17365D",
+      "fontSize": 12
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "color": "#333333",
+      "fontSize": 10
+    },
+    "callout": {
+      "fontFace": "Segoe UI Semibold",
+      "color": "#17365D",
+      "fontSize": 22
+    }
+  },
+  "visualStyles": {
+    "page": {
+      "*": {
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#F4F6F9"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

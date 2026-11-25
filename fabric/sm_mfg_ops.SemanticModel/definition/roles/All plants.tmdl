@@ -1,0 +1,3 @@
+/// Group management and controlling: no plant filter.
+role 'All plants'
+	modelPermission: read

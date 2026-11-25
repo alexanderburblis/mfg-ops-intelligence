@@ -80,21 +80,12 @@ NOTEBOOKS = {
         ),
         (
             "parameters",
-            "# Parameters (the Data Pipeline overrides these)\nload_mode = 'full'  # or 'incremental'\nraw_path = 'Files/raw'  # e.g. 'Files/increments/2026-11-15' for a change extract",
+            '# Parameters (the Data Pipeline overrides these)\nload_mode = "full"  # or "incremental"\nraw_path = "Files/raw"  # e.g. "Files/increments/2026-11-15" for a change extract\ngenerate_sources = True  # demo only: write synthetic extracts first (no real ERP connected)',
         ),
         ("code", INSTALL),
-        ("code", SETUP),
         (
             "code",
-            "from mfgops.orchestrate import run_pipeline\nlh.raw_path = raw_path\nres = run_pipeline(lh, max_error_rate=0.02, mode=load_mode)\nprint(res.run_id, res.mode, res.status, res.failed_stage, res.message)",
-        ),
-        (
-            "code",
-            "display(lh.read('meta', 'pipeline_runs').filter(f\"run_id = '{res.run_id}'\").orderBy('started_at'))",
-        ),
-        (
-            "code",
-            "if res.status != 'success':\n    raise RuntimeError(f'Pipeline run {res.run_id} failed at {res.failed_stage}: {res.message}')",
+            'from mfgops.generate import generate, generate_increment\nfrom mfgops.lakehouse import Lakehouse\nfrom mfgops.orchestrate import run_pipeline\n\nif generate_sources:\n    target = "/lakehouse/default/" + raw_path\n    print(generate_increment(target) if load_mode == "incremental" else generate(target))\nlh = Lakehouse.detect(spark)\nlh.raw_path = raw_path\nres = run_pipeline(lh, max_error_rate=0.02, mode=load_mode)\nprint(res.run_id, res.mode, res.status, res.failed_stage, res.message)\nif res.status != "success":\n    raise RuntimeError(f"Pipeline run {res.run_id} failed at {res.failed_stage}: {res.message}")',
         ),
     ],
     "06_deploy_model_and_report": [

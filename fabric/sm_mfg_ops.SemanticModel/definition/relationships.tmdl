@@ -1,0 +1,64 @@
+relationship rel_sales_date
+	fromColumn: gold_fact_sales_order_line.order_date_key
+	toColumn: gold_dim_date.date_key
+
+relationship rel_sales_requested_date
+	isActive: false
+	fromColumn: gold_fact_sales_order_line.requested_date_key
+	toColumn: gold_dim_date.date_key
+
+relationship rel_sales_customer
+	fromColumn: gold_fact_sales_order_line.customer_sk
+	toColumn: gold_dim_customer.customer_sk
+
+relationship rel_sales_material
+	fromColumn: gold_fact_sales_order_line.material_id
+	toColumn: gold_dim_material.material_id
+
+relationship rel_sales_plant
+	fromColumn: gold_fact_sales_order_line.plant_id
+	toColumn: gold_dim_plant.plant_id
+
+relationship rel_prod_date
+	fromColumn: gold_fact_production_order.planned_finish_key
+	toColumn: gold_dim_date.date_key
+
+relationship rel_prod_material
+	fromColumn: gold_fact_production_order.material_id
+	toColumn: gold_dim_material.material_id
+
+relationship rel_prod_plant
+	fromColumn: gold_fact_production_order.plant_id
+	toColumn: gold_dim_plant.plant_id
+
+relationship rel_prod_workcenter
+	fromColumn: gold_fact_production_order.work_center_id
+	toColumn: gold_dim_work_center.work_center_id
+
+relationship rel_inv_date
+	fromColumn: gold_fact_inventory_snapshot.snapshot_date_key
+	toColumn: gold_dim_date.date_key
+
+relationship rel_inv_material
+	fromColumn: gold_fact_inventory_snapshot.material_id
+	toColumn: gold_dim_material.material_id
+
+relationship rel_inv_plant
+	fromColumn: gold_fact_inventory_snapshot.plant_id
+	toColumn: gold_dim_plant.plant_id
+
+relationship rel_pur_date
+	fromColumn: gold_fact_purchase_order.promised_date_key
+	toColumn: gold_dim_date.date_key
+
+relationship rel_pur_supplier
+	fromColumn: gold_fact_purchase_order.supplier_id
+	toColumn: gold_dim_supplier.supplier_id
+
+relationship rel_pur_material
+	fromColumn: gold_fact_purchase_order.material_id
+	toColumn: gold_dim_material.material_id
+
+relationship rel_pur_plant
+	fromColumn: gold_fact_purchase_order.plant_id
+	toColumn: gold_dim_plant.plant_id

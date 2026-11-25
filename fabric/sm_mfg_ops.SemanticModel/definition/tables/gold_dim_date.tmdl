@@ -1,0 +1,87 @@
+table gold_dim_date
+	lineageTag: cf46f9b2-e8ea-5c18-b45c-06639f05df22
+	dataCategory: Time
+
+	column date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		isKey
+		lineageTag: d38814fa-dca9-5700-8e87-3c65279a7004
+		summarizeBy: none
+		sourceColumn: date
+
+		annotation SummarizationSetBy = Automatic
+
+	column date_key
+		dataType: int64
+		isHidden
+		lineageTag: c952d76c-3852-5990-be03-838176efe7ea
+		summarizeBy: none
+		sourceColumn: date_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column year
+		dataType: int64
+		lineageTag: 9444fca0-9208-5e74-ace8-417c4670461f
+		summarizeBy: none
+		sourceColumn: year
+
+		annotation SummarizationSetBy = Automatic
+
+	column quarter
+		dataType: string
+		lineageTag: 1130edd0-12c6-5716-bbeb-41257e8d7639
+		summarizeBy: none
+		sourceColumn: quarter
+
+		annotation SummarizationSetBy = Automatic
+
+	column month_no
+		dataType: int64
+		isHidden
+		lineageTag: b07b8a30-2ff6-5825-93e6-97af6771bcab
+		summarizeBy: none
+		sourceColumn: month_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column month
+		dataType: string
+		lineageTag: df445458-fcc8-505e-9240-976492cdca36
+		summarizeBy: none
+		sourceColumn: month
+		sortByColumn: month_no
+
+		annotation SummarizationSetBy = Automatic
+
+	column year_month
+		dataType: string
+		lineageTag: b4b72ec0-2c54-51f8-9756-2390944cc53f
+		summarizeBy: none
+		sourceColumn: year_month
+
+		annotation SummarizationSetBy = Automatic
+
+	column iso_week
+		dataType: int64
+		lineageTag: 19ec23c5-465f-576a-a3b7-f30d98397e52
+		summarizeBy: none
+		sourceColumn: iso_week
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_weekday
+		dataType: boolean
+		lineageTag: 2a69a4ac-4090-5424-962e-86bb156ca98e
+		summarizeBy: none
+		sourceColumn: is_weekday
+
+		annotation SummarizationSetBy = Automatic
+
+	partition gold_dim_date = entity
+		mode: directLake
+		source
+			entityName: gold_dim_date
+			schemaName: dbo
+			expressionSource: DatabaseQuery
