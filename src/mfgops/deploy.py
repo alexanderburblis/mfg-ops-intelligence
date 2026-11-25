@@ -27,7 +27,7 @@ from mfgops.report_def import report_files
 MODEL_NAME = "sm_mfg_ops"
 REPORT_NAME = "rpt_mfg_ops"
 LAKEHOUSE_NAME = "lh_mfg_ops"
-PLACEHOLDERS = ("SQL_ENDPOINT", "SQL_ENDPOINT_ID", "SEMANTIC_MODEL_CONNECTION")
+PLACEHOLDERS = ("SQL_ENDPOINT", "SQL_ENDPOINT_ID", "SEMANTIC_MODEL_CONNECTION", "SEMANTIC_MODEL_ID")
 
 
 def load_parts(files: dict[str, str], replacements: dict[str, str]) -> list[dict]:
@@ -51,11 +51,11 @@ def load_parts(files: dict[str, str], replacements: dict[str, str]) -> list[dict
     return parts
 
 
-def connection_string(workspace_name: str, model_id: str) -> str:
+def connection_string(workspace_name: str) -> str:
+    """Live connection of the report to the semantic model (the model id goes in pbiModelDatabaseName)."""
     return (
-        f'Data Source="powerbi://api.powerbi.com/v1.0/myorg/{workspace_name}";'
-        f"initial catalog={MODEL_NAME};access mode=readonly;integrated security=ClaimsToken;"
-        f"semanticmodelid={model_id}"
+        f"Data Source=powerbi://api.powerbi.com/v1.0/myorg/{workspace_name};"
+        f"Initial Catalog={MODEL_NAME};Integrated Security=ClaimsToken"
     )
 
 
@@ -132,7 +132,7 @@ def deploy(workspace_id: str | None = None, client=None, refresh: bool = True) -
         fabric.refresh_dataset(MODEL_NAME, workspace=workspace_id)
     report_parts = load_parts(
         report_files(),
-        {"SEMANTIC_MODEL_CONNECTION": connection_string(ws_info["displayName"], model_id).replace('"', '\\"')},
+        {"SEMANTIC_MODEL_CONNECTION": connection_string(ws_info["displayName"]), "SEMANTIC_MODEL_ID": model_id},
     )
     report_id = api.upsert(workspace_id, "reports", REPORT_NAME, report_parts, fmt="PBIR")
     return {"workspace": workspace_id, "semantic_model": model_id, "report": report_id}

@@ -678,7 +678,16 @@ def report_files() -> dict[str, str]:
         "definition.pbir",
         {
             "version": "4.0",
-            "datasetReference": {"byConnection": {"connectionString": "{{SEMANTIC_MODEL_CONNECTION}}"}},
+            "datasetReference": {
+                "byConnection": {
+                    "connectionString": "{{SEMANTIC_MODEL_CONNECTION}}",
+                    "pbiServiceModelId": None,
+                    "pbiModelVirtualServerName": "sobe_wowvirtualserver",
+                    "pbiModelDatabaseName": "{{SEMANTIC_MODEL_ID}}",
+                    "name": "EntityDataSource",
+                    "connectionType": "pbiServiceXmlaStyleLive",
+                }
+            },
         },
     )
     write(f"{d}/version.json", {"$schema": f"{SCHEMA}/versionMetadata/1.0.0/schema.json", "version": "2.0.0"})
