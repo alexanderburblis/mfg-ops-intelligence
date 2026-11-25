@@ -16,7 +16,7 @@ Short records of the main design choices: context, decision, alternatives, conse
 - **PySpark** for bronze → silver → gold: it is the native engine of Fabric notebooks and scales from this sample (≈70k rows) to real ERP volumes (tens of millions of rows) without a rewrite.
 - **Spark SQL** for reconciliation, because KPI definitions written as SQL are readable by analysts and independent of the DataFrame code they check.
 - **pandas** only for generating test data and the demo, where the data is small and the code runs on one machine.
-**Consequences.** At 70k rows, pandas would be faster locally. The choice is about the target platform and volume, and is stated as such in interviews.
+**Consequences.** At 70k rows, pandas would be faster locally. The choice is about the target platform and volume, and is documented as such.
 
 ## ADR-003 Quality gate before gold, not after
 
