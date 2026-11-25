@@ -98,7 +98,7 @@ notebooks/         Fabric notebooks 00–06 (thin wrappers around the package)
 semantic-model/    earlier hand-written DAX and TMDL (superseded by model_def.py)
 docs/              architecture · decisions · source-mapping · requirements spec · data-quality-rules
                    data-dictionary · fabric-setup
-                   kpi guides (EN/DE) · interview-demo-guide · evidence/ · screenshots/
+                   kpi guides (EN/DE) · evidence/ · screenshots/
 sample-data/gold/  gold tables as CSV (generated, seed 42)
 tests/             pipeline, data-quality, orchestration, incremental and Fabric-item tests
 tools/             notebook, documentation and Fabric item generators
